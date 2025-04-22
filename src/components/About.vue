@@ -25,7 +25,7 @@ import profilePic from '/src/assets/img/foto_perfil.jpeg'; // Imagen de perfil
         </p>
 
         <!-- Botón de descarga de CV -->
-        <a href="#" download class="download-btn">Descargar CV</a>
+        <a href="/src/assets/cv/CV HARVARD - Fernando Gonzalo Alma Dileo.pdf" download class="download-btn">Descargar CV</a>
 
         <!-- Iconos de redes sociales -->
         <div class="social-icons">
