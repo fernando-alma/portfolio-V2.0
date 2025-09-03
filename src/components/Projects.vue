@@ -1,287 +1,965 @@
-<script setup>
-import { ref } from 'vue';
-
-import proyecto1 from '/src/assets/img/Proyecto1.png';
-import proyecto2 from '/src/assets/img/Proyecto2.png';
-import proyecto3 from '/src/assets/img/Proyecto3.png';
-import proyecto4 from '/src/assets/img/Proyecto4.png';
-import proyecto5 from '/src/assets/img/Proyecto5.png';
-import proyecto6 from '/src/assets/img/Proyecto6.png';
-
-const proyectos = ref([
-    {
-        id: 1,
-        src: proyecto1,
-        titulo: "Landing Page y Carta Digital",
-        descripcion: "Sitio realizado para una discoteca de México, el mismo cuenta con un sistema interno para menú digital.",
-        ano: "(2023)",
-        proyectoLink: "https://www.example.com",
-        githubLink: "https://xoxoclub.com.mx/",
-        tecnologias: [
-            {
-                nombre: "WordPress",
-                icono: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            },
-           
-        ]
-    },
-    {
-        id: 2,
-        src: proyecto2,
-        titulo: "Web Inmobiliria Galea Propiedades",
-        descripcion: "Sitio web con un sistema interno de carga de propiedades inmobiliarias.",
-        ano: "(2024)",
-        proyectoLink: "https://www.example.com",
-        githubLink: "https://galeapropiedades.com/",
-        tecnologias: [
-            {
-                nombre: "WordPress",
-                icono: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            }
-        ]
-    },
-    {
-        id: 3,
-        src: proyecto3,
-        titulo: "Web Institucional de Inversionistas",
-        descripcion: "Sitio realizado para unos empresarios expertos en finanzas de México.",
-        ano: "(2022)",
-        proyectoLink: "https://www.example.com",
-        githubLink: "https://dsginversiones.com.mx/",
-        tecnologias: [
-            {
-                nombre: "WordPress",
-                icono: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            }
-        ]
-    },
-    {
-        id: 4,
-        src: proyecto4,
-        titulo: "Web Institucional de Ingeniería Aplicada",
-        descripcion: "Sitio realizado para una empresa de ingeniería aplicada a procesos termodinámicos y de refrigeración.",
-        ano: "(2023)",
-        proyectoLink: "https://www.example.com",
-        githubLink: "https://termetsa.com.ar/",
-        tecnologias: [
-            {
-                nombre: "WordPress",
-                icono: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            }
-        ]
-    },
-    {
-        id: 5,
-        src: proyecto5,
-        titulo: "Landing Page fiambrería El Nuevo Puente",
-        descripcion: "Sitio realizado para la icónica fiambrería ubicada en el corazón de Mendoza.",
-        ano: "(2022)",
-        proyectoLink: "https://www.example.com",
-        githubLink: "https://elnuevopuente.com.ar/",
-        tecnologias: [
-            {
-                nombre: "WordPress",
-                icono: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            }
-        ]
-    },
-    {
-        id: 6,
-        src: proyecto6,
-        titulo: "Web Institucional de Peumayén Rugby Club",
-        descripcion: "Sitio realizado para el club de Rugby Peumayén.",
-        ano: "(2023)",
-        proyectoLink: "https://www.example.com",
-        githubLink: "https://peumayenrugbyclub.com.ar/",
-        tecnologias: [
-            {
-                nombre: "WordPress",
-                icono: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-            }
-        ]
-    },
-]);
-</script>
-
 <template>
-
-    <section class="proyectos">
-        <h1 id="proyect">Algunos de mis proyectos</h1>
-        <div class="galeria">
-
-            <ul>
-                <li class="proyecto" v-for="proyecto in proyectos" :key="proyecto.id">
-                    <img :src="proyecto.src" :alt="proyecto.titulo" />
-                    <div class="proyecto-info">
-                        <h3>{{ proyecto.titulo }} <span>{{ proyecto.ano }}</span></h3>
-                        <p>{{ proyecto.descripcion }}</p>
-                        <div class="proyecto-links">
-                            <a :href="proyecto.githubLink" target="_blank" rel="noopener noreferrer"
-                                class="btn-ver-mas">Ver más</a>
-                        </div>
-                    </div>
-
-                    <!-- Sección de Tecnologías -->
-                    <div class="proyecto-tecnologias">
-                        <div v-for="tecnologia in proyecto.tecnologias" :key="tecnologia.nombre" class="tecnologia">
-                            <img :src="tecnologia.icono" :alt="tecnologia.nombre" />
-                            <span>{{ tecnologia.nombre }}</span>
-                        </div>
-                    </div>
-                </li>
-
-            </ul>
+  <!-- Primer slider - Proyectos profesionales -->
+  <h1 id="experiencia">Algunos de mis proyectos profesionales</h1>
+  <div class="infinite-slider-container" ref="sliderContainer">
+    <div class="slider-wrapper" ref="sliderWrapper">
+      <div 
+        class="slider-track" 
+        ref="sliderTrack"
+        :style="{ 
+          transform: `translateX(${translateX}px)`, 
+          transition: isTransitioning ? `transform ${transitionDuration}ms ease-in-out` : 'none' 
+        }"
+        @touchstart="handleTouchStart"
+        @touchmove="handleTouchMove"
+        @touchend="handleTouchEnd"
+        @mousedown="handleMouseDown"
+        @mousemove="handleMouseMove"
+        @mouseup="handleMouseUp"
+        @mouseleave="handleMouseUp"
+      >
+        <div 
+          v-for="(project, index) in displayProjects" 
+          :key="`slide-${index}`"
+          class="slide-item"
+        >
+          <div class="project-card">
+            <div class="image-wrapper">
+              <img 
+                :src="project.image" 
+                :alt="project.name" 
+                class="project-image"
+                loading="lazy"
+                @load="handleImageLoad"
+              />
+              <span class="project-category">{{ project.category }}</span>
+            </div>
+            <div class="card-content">
+              <h3 class="project-title">{{ project.name }}</h3>
+              <p class="project-description">{{ project.description }}</p>
+              <p class="project-tech">{{ project.technologies.join(', ') }}</p>
+              <a v-if="project.link" :href="project.link" target="_blank" class="project-link">
+                Ver sitio
+              </a>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    
+    <!-- Flechas fuera del slider -->
+    <button 
+      class="nav-arrow nav-arrow-left" 
+      @click="goToPrevious" 
+      @mouseenter="pauseAutoplay"
+      @mouseleave="resumeAutoplay"
+      :disabled="isAnimating"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+    <button 
+      class="nav-arrow nav-arrow-right" 
+      @click="goToNext" 
+      @mouseenter="pauseAutoplay"
+      @mouseleave="resumeAutoplay"
+      :disabled="isAnimating"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
 
+    <!-- Dots -->
+    <div class="pagination-dots">
+      <button 
+        v-for="(project, index) in originalProjects" 
+        :key="index"
+        class="dot"
+        :class="{ active: index === currentRealIndex }"
+        @click="goToSlide(index)"
+      ></button>
+    </div>
+  </div>
+  
+  <!-- Segundo slider - Proyectos de estudio -->
+  <h1 class="study-projects-title">Algunos de mis proyectos de estudio</h1>
+  <div class="infinite-slider-container" ref="sliderContainer2">
+    <div class="slider-wrapper" ref="sliderWrapper2">
+      <div 
+        class="slider-track" 
+        ref="sliderTrack2"
+        :style="{ 
+          transform: `translateX(${translateX2}px)`, 
+          transition: isTransitioning2 ? `transform ${transitionDuration}ms ease-in-out` : 'none' 
+        }"
+        @touchstart="handleTouchStart2"
+        @touchmove="handleTouchMove2"
+        @touchend="handleTouchEnd2"
+        @mousedown="handleMouseDown2"
+        @mousemove="handleMouseMove2"
+        @mouseup="handleMouseUp2"
+        @mouseleave="handleMouseUp2"
+      >
+        <div 
+          v-for="(project, index) in displayStudyProjects" 
+          :key="`study-slide-${index}`"
+          class="slide-item"
+        >
+          <div class="project-card">
+            <div class="image-wrapper">
+              <img 
+                :src="project.image" 
+                :alt="project.name" 
+                class="project-image"
+                loading="lazy"
+                @load="handleImageLoad"
+              />
+              <span class="project-category">{{ project.category }}</span>
+            </div>
+            <div class="card-content">
+              <h3 class="project-title">{{ project.name }}</h3>
+              <p class="project-description">{{ project.description }}</p>
+              <p class="project-tech">{{ project.technologies.join(', ') }}</p>
+              <a v-if="project.link" :href="project.link" target="_blank" class="project-link">
+                Ver proyecto
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Flechas para el segundo slider -->
+    <button 
+      class="nav-arrow nav-arrow-left" 
+      @click="goToPrevious2" 
+      @mouseenter="pauseAutoplay2"
+      @mouseleave="resumeAutoplay2"
+      :disabled="isAnimating2"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+    <button 
+      class="nav-arrow nav-arrow-right" 
+      @click="goToNext2" 
+      @mouseenter="pauseAutoplay2"
+      @mouseleave="resumeAutoplay2"
+      :disabled="isAnimating2"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
 
-    </section>
-
-
+    <!-- Dots para el segundo slider -->
+    <div class="pagination-dots">
+      <button 
+        v-for="(project, index) in studyProjects" 
+        :key="index"
+        class="dot"
+        :class="{ active: index === currentRealIndex2 }"
+        @click="goToSlide2(index)"
+      ></button>
+    </div>
+  </div>
+  <!-- Botón para ver todos -->
+    <div class="view-all-section">
+      <router-link to="/portfolio-completo" class="btn-view-all">
+         Ver Portfolio Completo
+      </router-link>
+    </div>
 </template>
 
 <script>
 export default {
-    name: "ProjectsSection"
+  name: "InfiniteSlider",
+  data() {
+    return {
+      currentIndex: 0,
+      currentRealIndex: 0,
+      translateX: 0,
+      isTransitioning: false,
+      isAnimating: false,
+      transitionDuration: 600,
+      slideWidth: 320,
+      slideGap: 24,
+      
+      // Autoplay
+      autoplayTimer: null,
+      autoplayPaused: false,
+      isVisible: true,
+      
+      // Drag
+      isDragging: false,
+      dragStartX: 0,
+      dragCurrentX: 0,
+      
+      // Intersection Observer
+      observer: null,
+      
+      originalProjects: [
+        { 
+          id: 1,
+          name: "Herbo", 
+          description: "Ecommerce para venta de baterías de autos y motos.", 
+          link: "https://herbomendoza.com.ar/",
+          image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=250&fit=crop",
+          category: "Ecommerce",
+          technologies: ["Vue.js", "CSS", "HTML"]
+        },
+        { 
+          id: 2,
+          name: "Franchi", 
+          description: "Sistema interno de carga de propiedades inmobiliarias con integración API.", 
+          link: "https://inmobiliariafranchi.com/",
+          image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop",
+          category: "Sistema Web",
+          technologies: ["Vue.js", "API", "JavaScript"]
+        },
+        { 
+          id: 3,
+          name: "Durox", 
+          description: "Sitio institucional de insumos para bodegas y enología.", 
+          link: "https://sitioseis.soulware.com.ar/",
+          image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=250&fit=crop",
+          category: "Web Institucional",
+          technologies: ["Vue.js", "CSS", "HTML"]
+        },
+        { 
+          id: 4,
+          name: "DSG", 
+          description: "Web corporativa para empresarios expertos en finanzas de México.", 
+          link: "https://sitiotres.soulware.com.ar/",
+          image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=250&fit=crop",
+          category: "Corporativa",
+          technologies: ["Vue.js", "CSS", "JavaScript"]
+        },
+        { 
+          id: 5,
+          name: "XOXO", 
+          description: "Sitio para discoteca en México con sistema de menú digital.", 
+          link: "https://sitiouno.soulware.com.ar/",
+          image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=250&fit=crop",
+          category: "Entretenimiento",
+          technologies: ["Vue.js", "HTML", "CSS"]
+        },
+        { 
+          id: 6,
+          name: "Chivas", 
+          description: "Servicios integrales para la industria del petróleo, gas y minería.", 
+          link: "https://servicioschivas.com.ar/",
+          image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=400&h=250&fit=crop",
+          category: "Industrial",
+          technologies: ["Vue.js", "API", "JavaScript"]
+        }
+      ],
+
+      // Variables para el segundo slider
+      currentIndex2: 0,
+      currentRealIndex2: 0,
+      translateX2: 0,
+      isTransitioning2: false,
+      isAnimating2: false,
+      autoplayTimer2: null,
+      autoplayPaused2: false,
+      isDragging2: false,
+      dragStartX2: 0,
+      dragCurrentX2: 0,
+      
+      // Proyectos de estudio
+      studyProjects: [
+        { 
+          id: 1,
+          name: "Portfolio Personal", 
+          description: "Portfolio desarrollado con Vue.js y animaciones CSS", 
+          link: "https://github.com/tuuser/portfolio",
+          image: "/img/portfolio.jpg",
+          category: "Frontend",
+          technologies: ["Vue.js", "CSS", "HTML"]
+        },
+        { 
+          id: 2,
+          name: "Weather App", 
+          description: "Aplicación del clima con API de OpenWeather", 
+          link: "https://github.com/tuuser/weather-app",
+          image: "/img/weather.jpg",
+          category: "Frontend",
+          technologies: ["Vue.js", "API", "JavaScript"]
+        },
+        { 
+          id: 3,
+          name: "Task Manager", 
+          description: "Aplicación de gestión de tareas con Vue y Firebase", 
+          link: "https://github.com/tuuser/task-manager",
+          image: "/img/tasks.jpg",
+          category: "Fullstack",
+          technologies: ["Vue.js", "Firebase", "CSS"]
+        }
+        // Agregar más proyectos según necesitemos
+      ]
+    };
+  },
+  
+  computed: {
+    displayProjects() {
+      // Crear loop infinito: [últimos] + [originales] + [primeros]
+      const first = this.originalProjects.slice(0, 2);
+      const last = this.originalProjects.slice(-2);
+      return [...last, ...this.originalProjects, ...first];
+    },
+    
+    totalSlides() {
+      return this.originalProjects.length;
+    },
+    
+    displayStudyProjects() {
+      const first = this.studyProjects.slice(0, 2);
+      const last = this.studyProjects.slice(-2);
+      return [...last, ...this.studyProjects, ...first];
+    },
+  },
+  
+  mounted() {
+    this.initSlider();
+    this.setupIntersectionObserver();
+    this.startAutoplay();
+    this.preloadImages();
+    
+    window.addEventListener('resize', this.handleResize);
+    this.initSlider2();
+    this.startAutoplay2();
+  },
+  
+  beforeUnmount() {
+    this.cleanup();
+  },
+  
+  methods: {
+    initSlider() {
+      this.$nextTick(() => {
+        // Posicionar en el primer slide real (después de los clones)
+        this.currentIndex = 2; // Posición de los slides reales
+        this.currentRealIndex = 0;
+        this.updatePosition(false); // Sin animación inicial
+      });
+    },
+    
+    updatePosition(animate = true) {
+      this.isTransitioning = animate;
+      this.translateX = -(this.currentIndex * (this.slideWidth + this.slideGap));
+    },
+    
+    goToNext() {
+      if (this.isAnimating) return;
+      
+      this.isAnimating = true;
+      this.currentIndex++;
+      this.currentRealIndex = (this.currentRealIndex + 1) % this.totalSlides;
+      
+      this.updatePosition(true);
+      this.preloadImages();
+      
+      // Verificar si necesitamos saltar al inicio
+      setTimeout(() => {
+        if (this.currentIndex >= this.totalSlides + 2) {
+          this.currentIndex = 2;
+          this.updatePosition(false);
+        }
+        this.isAnimating = false;
+        this.isTransitioning = false;
+      }, this.transitionDuration);
+    },
+    
+    goToPrevious() {
+      if (this.isAnimating) return;
+      
+      this.isAnimating = true;
+      this.currentIndex--;
+      this.currentRealIndex = this.currentRealIndex === 0 ? this.totalSlides - 1 : this.currentRealIndex - 1;
+      
+      this.updatePosition(true);
+      
+      // Verificar si necesitamos saltar al final
+      setTimeout(() => {
+        if (this.currentIndex < 2) {
+          this.currentIndex = this.totalSlides + 1;
+          this.updatePosition(false);
+        }
+        this.isAnimating = false;
+        this.isTransitioning = false;
+      }, this.transitionDuration);
+    },
+    
+    goToSlide(index) {
+      if (this.isAnimating || index === this.currentRealIndex) return;
+      
+      this.isAnimating = true;
+      this.currentRealIndex = index;
+      this.currentIndex = index + 2; // Ajustar por los clones
+      
+      this.updatePosition(true);
+      this.preloadImages();
+      
+      setTimeout(() => {
+        this.isAnimating = false;
+        this.isTransitioning = false;
+      }, this.transitionDuration);
+    },
+    
+    // AUTOPLAY
+    startAutoplay() {
+      this.stopAutoplay();
+      if (this.isVisible && !this.autoplayPaused) {
+        this.autoplayTimer = setInterval(() => {
+          if (!this.isDragging && !this.isAnimating && this.isVisible && !this.autoplayPaused) {
+            this.goToNext();
+          }
+        }, 3000);
+      }
+    },
+    
+    stopAutoplay() {
+      if (this.autoplayTimer) {
+        clearInterval(this.autoplayTimer);
+        this.autoplayTimer = null;
+      }
+    },
+    
+    pauseAutoplay() {
+      this.autoplayPaused = true;
+      this.stopAutoplay();
+    },
+    
+    resumeAutoplay() {
+      this.autoplayPaused = false;
+      setTimeout(() => {
+        if (!this.autoplayPaused) {
+          this.startAutoplay();
+        }
+      }, 1000);
+    },
+    
+    // INTERSECTION OBSERVER
+    setupIntersectionObserver() {
+      if ('IntersectionObserver' in window && this.$refs.sliderContainer) {
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            this.isVisible = entry.isIntersecting;
+            if (entry.isIntersecting) {
+              this.startAutoplay();
+            } else {
+              this.stopAutoplay();
+            }
+          });
+        }, { threshold: 0.5 });
+        
+        this.observer.observe(this.$refs.sliderContainer);
+      }
+    },
+    
+    // TOUCH GESTURES
+    handleTouchStart(e) {
+      this.startDrag(e.touches[0].clientX);
+    },
+    
+    handleTouchMove(e) {
+      if (this.isDragging) {
+        e.preventDefault();
+        this.updateDrag(e.touches[0].clientX);
+      }
+    },
+    
+    handleTouchEnd() {
+      this.endDrag();
+    },
+    
+    handleMouseDown(e) {
+      this.startDrag(e.clientX);
+    },
+    
+    handleMouseMove(e) {
+      if (this.isDragging) {
+        this.updateDrag(e.clientX);
+      }
+    },
+    
+    handleMouseUp() {
+      this.endDrag();
+    },
+    
+    startDrag(clientX) {
+      this.isDragging = true;
+      this.dragStartX = clientX;
+      this.dragCurrentX = clientX;
+      this.pauseAutoplay();
+    },
+    
+    updateDrag(clientX) {
+      if (!this.isDragging) return;
+      
+      this.dragCurrentX = clientX;
+      const diff = this.dragCurrentX - this.dragStartX;
+      const baseTranslate = -(this.currentIndex * (this.slideWidth + this.slideGap));
+      this.translateX = baseTranslate + diff;
+    },
+    
+    endDrag() {
+      if (!this.isDragging) return;
+      
+      const diff = this.dragCurrentX - this.dragStartX;
+      const threshold = this.slideWidth * 0.3;
+      
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          this.goToPrevious();
+        } else {
+          this.goToNext();
+        }
+      } else {
+        this.updatePosition(true);
+        setTimeout(() => {
+          this.isTransitioning = false;
+        }, this.transitionDuration);
+      }
+      
+      this.isDragging = false;
+      this.resumeAutoplay();
+    },
+    
+    // IMAGE PRELOADING
+    preloadImages() {
+      const nextIndex = (this.currentRealIndex + 1) % this.totalSlides;
+      const prevIndex = this.currentRealIndex === 0 ? this.totalSlides - 1 : this.currentRealIndex - 1;
+      
+      [nextIndex, prevIndex].forEach(index => {
+        const img = new Image();
+        img.src = this.originalProjects[index].image;
+      });
+    },
+    
+    handleImageLoad() {
+      // Imagen cargada
+    },
+    
+    handleResize() {
+      this.updatePosition(false);
+    },
+    
+    cleanup() {
+      this.stopAutoplay();
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+      window.removeEventListener('resize', this.handleResize);
+    },
+    
+    // Métodos para el segundo slider (duplicar los métodos existentes agregando "2")
+    initSlider2() {
+      this.$nextTick(() => {
+        this.currentIndex2 = 2;
+        this.currentRealIndex2 = 0;
+        this.updatePosition2(false);
+      });
+    },
+    
+    updatePosition2(animate = true) {
+      this.isTransitioning2 = animate;
+      this.translateX2 = -(this.currentIndex2 * (this.slideWidth + this.slideGap));
+    },
+    
+    goToNext2() {
+      if (this.isAnimating2) return;
+      
+      this.isAnimating2 = true;
+      this.currentIndex2++;
+      this.currentRealIndex2 = (this.currentRealIndex2 + 1) % this.studyProjects.length;
+      
+      this.updatePosition2(true);
+      
+      setTimeout(() => {
+        if (this.currentIndex2 >= this.studyProjects.length + 2) {
+          this.currentIndex2 = 2;
+          this.updatePosition2(false);
+        }
+        this.isAnimating2 = false;
+        this.isTransitioning2 = false;
+      }, this.transitionDuration);
+    },
+    
+    goToPrevious2() {
+      if (this.isAnimating2) return;
+      
+      this.isAnimating2 = true;
+      this.currentIndex2--;
+      this.currentRealIndex2 = this.currentRealIndex2 === 0 ? this.studyProjects.length - 1 : this.currentRealIndex2 - 1;
+      
+      this.updatePosition2(true);
+      
+      setTimeout(() => {
+        if (this.currentIndex2 < 2) {
+          this.currentIndex2 = this.studyProjects.length + 1;
+          this.updatePosition2(false);
+        }
+        this.isAnimating2 = false;
+        this.isTransitioning2 = false;
+      }, this.transitionDuration);
+    },
+    
+    goToSlide2(index) {
+      if (this.isAnimating2 || index === this.currentRealIndex2) return;
+      
+      this.isAnimating2 = true;
+      this.currentRealIndex2 = index;
+      this.currentIndex2 = index + 2; // Ajustar por los clones
+      
+      this.updatePosition2(true);
+      this.preloadImages();
+      
+      setTimeout(() => {
+        this.isAnimating2 = false;
+        this.isTransitioning2 = false;
+      }, this.transitionDuration);
+    },
+    
+    // AUTOPLAY
+    startAutoplay2() {
+      this.stopAutoplay2();
+      if (this.isVisible && !this.autoplayPaused2) {
+        this.autoplayTimer2 = setInterval(() => {
+          if (!this.isDragging2 && !this.isAnimating2 && this.isVisible && !this.autoplayPaused2) {
+            this.goToNext2();
+          }
+        }, 3000);
+      }
+    },
+    
+    stopAutoplay2() {
+      if (this.autoplayTimer2) {
+        clearInterval(this.autoplayTimer2);
+        this.autoplayTimer2 = null;
+      }
+    },
+    
+    pauseAutoplay2() {
+      this.autoplayPaused2 = true;
+      this.stopAutoplay2();
+    },
+    
+    resumeAutoplay2() {
+      this.autoplayPaused2 = false;
+      setTimeout(() => {
+        if (!this.autoplayPaused2) {
+          this.startAutoplay2();
+        }
+      }, 1000);
+    },
+  }
 };
 </script>
 
 <style scoped>
-.proyectos {
-    padding-top: 10px;
-    font-size: 15px;
-    min-height: 100vh;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1248%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='url(%26quot%3b%23SvgjsLinearGradient1249%26quot%3b)'%3e%3c/rect%3e%3cpath d='M-85.16 377.31L-85.16 377.31' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-85.16 377.31L71.06 402.18' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-85.16 377.31L-71.68 558.36' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-71.68 558.36L-71.68 558.36' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-71.68 558.36L-48.22 675.35' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-71.68 558.36L95.27 657.03' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-48.22 675.35L-48.22 675.35' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-48.22 675.35L95.27 657.03' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-48.22 675.35L203.38 674.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-48.22 675.35L71.06 402.18' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M71.06 402.18L71.06 402.18' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M71.06 402.18L224.77 525.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M71.06 402.18L-71.68 558.36' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M71.06 402.18L95.27 657.03' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M71.06 402.18L344.63 392.04' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M95.27 657.03L95.27 657.03' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M95.27 657.03L203.38 674.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M95.27 657.03L224.77 525.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M224.77 525.55L224.77 525.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M224.77 525.55L358.78 544.97' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M224.77 525.55L203.38 674.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M224.77 525.55L344.63 392.04' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M203.38 674.06L203.38 674.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M203.38 674.06L364.58 687.93' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M203.38 674.06L358.78 544.97' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M203.38 674.06L-71.68 558.36' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M344.63 392.04L344.63 392.04' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M344.63 392.04L358.78 544.97' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M344.63 392.04L530.78 541.81' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M358.78 544.97L358.78 544.97' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M358.78 544.97L364.58 687.93' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M358.78 544.97L530.78 541.81' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M364.58 687.93L364.58 687.93' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M364.58 687.93L531.31 677.21' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M364.58 687.93L224.77 525.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M530.78 541.81L530.78 541.81' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M530.78 541.81L531.31 677.21' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M530.78 541.81L666.33 552.31' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M530.78 541.81L646.16 677.8' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M531.31 677.21L531.31 677.21' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M531.31 677.21L646.16 677.8' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M531.31 677.21L666.33 552.31' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M531.31 677.21L358.78 544.97' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M643.13 225.5L643.13 225.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M643.13 225.5L659.93 401.7' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M659.93 401.7L659.93 401.7' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M659.93 401.7L807.12 400.25' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.33 552.31L666.33 552.31' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.33 552.31L646.16 677.8' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.33 552.31L659.93 401.7' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.33 552.31L826.05 544.14' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M646.16 677.8L646.16 677.8' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L860.49 79.39' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L858.69 199.42' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L981.17 60.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L969.31 223.11' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L995.35 -81.02' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L1107.24 87.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M860.49 79.39L643.13 225.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M858.69 199.42L858.69 199.42' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M858.69 199.42L969.31 223.11' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M858.69 199.42L981.17 60.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M858.69 199.42L983.07 349.71' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M858.69 199.42L807.12 400.25' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M858.69 199.42L643.13 225.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M807.12 400.25L807.12 400.25' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M807.12 400.25L826.05 544.14' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M807.12 400.25L983.07 349.71' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M807.12 400.25L666.33 552.31' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M826.05 544.14L826.05 544.14' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M826.05 544.14L824.93 702.68' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M824.93 702.68L824.93 702.68' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M824.93 702.68L961.8 705.98' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M824.93 702.68L646.16 677.8' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M824.93 702.68L666.33 552.31' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M995.35 -81.02L995.35 -81.02' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M995.35 -81.02L981.17 60.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M995.35 -81.02L1107.24 87.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M995.35 -81.02L1240.71 -92.7' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M981.17 60.5L981.17 60.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M981.17 60.5L1107.24 87.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M981.17 60.5L969.31 223.11' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M969.31 223.11L969.31 223.11' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M969.31 223.11L983.07 349.71' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M969.31 223.11L1128.35 231.56' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M969.31 223.11L1107.24 87.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M983.07 349.71L983.07 349.71' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M983.07 349.71L993.96 498.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M993.96 498.55L993.96 498.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M993.96 498.55L1124.81 560.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M993.96 498.55L826.05 544.14' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M993.96 498.55L1151.25 390.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M961.8 705.98L961.8 705.98' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M961.8 705.98L1156.94 645.38' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M961.8 705.98L993.96 498.55' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M961.8 705.98L826.05 544.14' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M961.8 705.98L1124.81 560.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M961.8 705.98L646.16 677.8' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1107.24 87.26L1107.24 87.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1107.24 87.26L1128.35 231.56' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1107.24 87.26L1283.05 90.4' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1128.35 231.56L1128.35 231.56' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1151.25 390.06L1151.25 390.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1151.25 390.06L1128.35 231.56' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1151.25 390.06L1124.81 560.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1151.25 390.06L983.07 349.71' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1124.81 560.26L1124.81 560.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1124.81 560.26L1156.94 645.38' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1124.81 560.26L1280.88 544.88' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1156.94 645.38L1156.94 645.38' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1240.71 -92.7L1240.71 -92.7' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1240.71 -92.7L1394.86 -67.42' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1240.71 -92.7L1283.05 90.4' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1240.71 -92.7L1107.24 87.26' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1240.71 -92.7L1452.09 83.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1283.05 90.4L1283.05 90.4' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1283.05 90.4L1452.09 83.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1283.05 90.4L1394.86 -67.42' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1283.05 90.4L1437.16 209.39' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1283.05 90.4L1128.35 231.56' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1280.88 544.88L1280.88 544.88' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1280.88 544.88L1424.72 492.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1280.88 544.88L1156.94 645.38' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1280.88 544.88L1151.25 390.06' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1280.88 544.88L1445.02 690.63' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1394.86 -67.42L1394.86 -67.42' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1394.86 -67.42L1452.09 83.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1394.86 -67.42L1537.84 45.92' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1394.86 -67.42L1603.28 -104.86' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1452.09 83.5L1452.09 83.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1452.09 83.5L1537.84 45.92' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1452.09 83.5L1437.16 209.39' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.16 209.39L1437.16 209.39' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.16 209.39L1543.74 257.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.16 209.39L1433.62 384.05' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.16 209.39L1537.84 45.92' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1433.62 384.05L1433.62 384.05' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1433.62 384.05L1424.72 492.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1433.62 384.05L1543.74 257.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1424.72 492.65L1424.72 492.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1424.72 492.65L1583.73 552.46' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1445.02 690.63L1445.02 690.63' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1445.02 690.63L1559.81 677' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1445.02 690.63L1583.73 552.46' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1445.02 690.63L1424.72 492.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1445.02 690.63L1156.94 645.38' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1445.02 690.63L1433.62 384.05' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1603.28 -104.86L1603.28 -104.86' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1603.28 -104.86L1537.84 45.92' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1603.28 -104.86L1452.09 83.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1537.84 45.92L1537.84 45.92' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1537.84 45.92L1543.74 257.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1537.84 45.92L1283.05 90.4' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1543.74 257.65L1543.74 257.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1543.74 257.65L1609.29 391.67' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1543.74 257.65L1452.09 83.5' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1543.74 257.65L1424.72 492.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1609.29 391.67L1609.29 391.67' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1609.29 391.67L1583.73 552.46' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1609.29 391.67L1433.62 384.05' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1583.73 552.46L1583.73 552.46' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1583.73 552.46L1559.81 677' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1583.73 552.46L1433.62 384.05' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1583.73 552.46L1543.74 257.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1559.81 677L1559.81 677' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1559.81 677L1424.72 492.65' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1559.81 677L1609.29 391.67' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1559.81 677L1280.88 544.88' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1559.81 677L1433.62 384.05' stroke='%23132e65' stroke-width='1.5'%3e%3c/path%3e%3ccircle r='5' cx='-85.16' cy='377.31' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='-71.68' cy='558.36' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='-48.22' cy='675.35' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='71.06' cy='402.18' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='95.27' cy='657.03' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='224.77' cy='525.55' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='203.38' cy='674.06' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='344.63' cy='392.04' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='358.78' cy='544.97' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='364.58' cy='687.93' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='530.78' cy='541.81' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='531.31' cy='677.21' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='643.13' cy='225.5' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='659.93' cy='401.7' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='666.33' cy='552.31' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='646.16' cy='677.8' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='860.49' cy='79.39' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='858.69' cy='199.42' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='807.12' cy='400.25' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='826.05' cy='544.14' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='824.93' cy='702.68' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='995.35' cy='-81.02' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='981.17' cy='60.5' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='969.31' cy='223.11' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='983.07' cy='349.71' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='993.96' cy='498.55' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='961.8' cy='705.98' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1107.24' cy='87.26' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1128.35' cy='231.56' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1151.25' cy='390.06' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1124.81' cy='560.26' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1156.94' cy='645.38' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1240.71' cy='-92.7' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1283.05' cy='90.4' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1280.88' cy='544.88' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1394.86' cy='-67.42' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1452.09' cy='83.5' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1437.16' cy='209.39' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1433.62' cy='384.05' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1424.72' cy='492.65' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1445.02' cy='690.63' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1603.28' cy='-104.86' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1537.84' cy='45.92' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1543.74' cy='257.65' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1609.29' cy='391.67' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1583.73' cy='552.46' fill='%23132e65'%3e%3c/circle%3e%3ccircle r='5' cx='1559.81' cy='677' fill='%23132e65'%3e%3c/circle%3e%3cpath d='M-87.85 670.58L-87.85 670.58' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-87.85 670.58L-73.36 552.63' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-87.85 670.58L41.65 670.83' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-87.85 670.58L59.25 525.1' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-87.85 670.58L241.53 639.77' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M59.25 525.1L59.25 525.1' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M59.25 525.1L-73.36 552.63' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M59.25 525.1L41.65 670.83' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M59.25 525.1L241.53 639.77' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M340.12 700.89L340.12 700.89' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M340.12 700.89L241.53 639.77' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M340.12 700.89L373.4 561.62' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M340.12 700.89L529.74 536.97' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M340.12 700.89L41.65 670.83' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M340.12 700.89L667.35 699.96' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1111.19 258.13L1111.19 258.13' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1111.19 258.13L1121.27 382.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1111.19 258.13L1276.37 250.91' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1111.19 258.13L971.11 361.79' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1111.19 258.13L1271.84 356.14' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1593.05 391.86L1593.05 391.86' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1593.05 391.86L1585.82 259.17' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1593.05 391.86L1569.85 543.31' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1573.81 704.5' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1433.78 641.54' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1569.85 543.31' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1278.05 659.8' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1593.05 391.86' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1573.81 704.5L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-73.36 552.63L-73.36 552.63' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-73.36 552.63L41.65 670.83' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-73.36 552.63L241.53 639.77' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M-73.36 552.63L340.12 700.89' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M41.65 670.83L41.65 670.83' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M241.53 639.77L241.53 639.77' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M241.53 639.77L373.4 561.62' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M241.53 639.77L41.65 670.83' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M241.53 639.77L529.74 536.97' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M373.4 561.62L373.4 561.62' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M529.74 536.97L529.74 536.97' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M529.74 536.97L666.11 537.36' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M529.74 536.97L373.4 561.62' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M654.29 390.26L654.29 390.26' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M654.29 390.26L666.11 537.36' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M654.29 390.26L843.01 393.32' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M654.29 390.26L529.74 536.97' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M654.29 390.26L836.38 557.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M654.29 390.26L667.35 699.96' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.11 537.36L666.11 537.36' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.11 537.36L667.35 699.96' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.11 537.36L836.38 557.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M666.11 537.36L843.01 393.32' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M667.35 699.96L667.35 699.96' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M667.35 699.96L850.34 699.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M843.01 393.32L843.01 393.32' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M843.01 393.32L971.11 361.79' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M843.01 393.32L959.8 496.82' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M843.01 393.32L836.38 557.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M836.38 557.98L836.38 557.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M836.38 557.98L959.8 496.82' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M836.38 557.98L850.34 699.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M836.38 557.98L667.35 699.96' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M836.38 557.98L1008.59 702.84' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M850.34 699.43L850.34 699.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M850.34 699.43L1008.59 702.84' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M850.34 699.43L959.8 496.82' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M850.34 699.43L666.11 537.36' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M850.34 699.43L1097.28 707.75' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M971.11 361.79L971.11 361.79' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M971.11 361.79L959.8 496.82' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M971.11 361.79L1121.27 382.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M971.11 361.79L1098.01 535.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M971.11 361.79L836.38 557.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M959.8 496.82L959.8 496.82' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M959.8 496.82L1098.01 535.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M959.8 496.82L1121.27 382.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1008.59 702.84L1008.59 702.84' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1008.59 702.84L1097.28 707.75' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1008.59 702.84L1098.01 535.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1121.27 382.43L1121.27 382.43' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1121.27 382.43L1271.84 356.14' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1121.27 382.43L1098.01 535.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1098.01 535.15L1098.01 535.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1098.01 535.15L1097.28 707.75' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1098.01 535.15L1300.6 487.87' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1097.28 707.75L1097.28 707.75' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1097.28 707.75L1278.05 659.8' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1097.28 707.75L959.8 496.82' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1097.28 707.75L1300.6 487.87' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1243.78 -51.71L1243.78 -51.71' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1243.78 -51.71L1294.4 44.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1243.78 -51.71L1461.77 -108.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1243.78 -51.71L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1243.78 -51.71L1276.37 250.91' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1243.78 -51.71L1111.19 258.13' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1294.4 44.98L1294.4 44.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1294.4 44.98L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1276.37 250.91L1276.37 250.91' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1276.37 250.91L1271.84 356.14' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1276.37 250.91L1437.1 227.81' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1271.84 356.14L1271.84 356.14' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1271.84 356.14L1300.6 487.87' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1271.84 356.14L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1300.6 487.87L1300.6 487.87' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1300.6 487.87L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1300.6 487.87L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1278.05 659.8L1278.05 659.8' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1278.05 659.8L1433.78 641.54' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1278.05 659.8L1300.6 487.87' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1278.05 659.8L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1461.77 -108.15L1461.77 -108.15' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1461.77 -108.15L1590.79 -74.18' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1461.77 -108.15L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1457.67 63.51L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1457.67 63.51L1609.68 79.99' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.1 227.81L1437.1 227.81' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.1 227.81L1585.82 259.17' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.1 227.81L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.1 227.81L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.1 227.81L1271.84 356.14' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1437.1 227.81L1593.05 391.86' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1418.77 393.7L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1418.77 393.7L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1418.77 393.7L1593.05 391.86' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1418.77 393.7L1276.37 250.91' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1423.5 505.74L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1433.78 641.54L1433.78 641.54' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1433.78 641.54L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1590.79 -74.18L1590.79 -74.18' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1590.79 -74.18L1609.68 79.99' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1590.79 -74.18L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1590.79 -74.18L1294.4 44.98' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1590.79 -74.18L1585.82 259.17' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1609.68 79.99L1609.68 79.99' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1609.68 79.99L1585.82 259.17' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1585.82 259.17L1585.82 259.17' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1585.82 259.17L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1585.82 259.17L1457.67 63.51' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1585.82 259.17L1569.85 543.31' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1569.85 543.31L1569.85 543.31' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1569.85 543.31L1423.5 505.74' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1569.85 543.31L1433.78 641.54' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3cpath d='M1569.85 543.31L1418.77 393.7' stroke='hsl(228.5%2c 77.2%25%2c 51.5%25)' stroke-width='1.5'%3e%3c/path%3e%3ccircle r='25' cx='-87.85' cy='670.58' fill='url(%26quot%3b%23SvgjsRadialGradient1250%26quot%3b)'%3e%3c/circle%3e%3ccircle r='25' cx='59.25' cy='525.1' fill='url(%26quot%3b%23SvgjsRadialGradient1250%26quot%3b)'%3e%3c/circle%3e%3ccircle r='25' cx='340.12' cy='700.89' fill='url(%26quot%3b%23SvgjsRadialGradient1250%26quot%3b)'%3e%3c/circle%3e%3ccircle r='25' cx='1111.19' cy='258.13' fill='url(%26quot%3b%23SvgjsRadialGradient1250%26quot%3b)'%3e%3c/circle%3e%3ccircle r='25' cx='1593.05' cy='391.86' fill='url(%26quot%3b%23SvgjsRadialGradient1250%26quot%3b)'%3e%3c/circle%3e%3ccircle r='25' cx='1573.81' cy='704.5' fill='url(%26quot%3b%23SvgjsRadialGradient1250%26quot%3b)'%3e%3c/circle%3e%3ccircle r='5' cx='-73.36' cy='552.63' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='41.65' cy='670.83' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='241.53' cy='639.77' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='373.4' cy='561.62' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='529.74' cy='536.97' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='654.29' cy='390.26' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='666.11' cy='537.36' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='667.35' cy='699.96' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='843.01' cy='393.32' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='836.38' cy='557.98' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='850.34' cy='699.43' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='971.11' cy='361.79' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='959.8' cy='496.82' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1008.59' cy='702.84' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1121.27' cy='382.43' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1098.01' cy='535.15' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1097.28' cy='707.75' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1243.78' cy='-51.71' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1294.4' cy='44.98' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1276.37' cy='250.91' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1271.84' cy='356.14' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1300.6' cy='487.87' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1278.05' cy='659.8' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1461.77' cy='-108.15' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1457.67' cy='63.51' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1437.1' cy='227.81' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1418.77' cy='393.7' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1423.5' cy='505.74' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1433.78' cy='641.54' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1590.79' cy='-74.18' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1609.68' cy='79.99' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1585.82' cy='259.17' fill='%238b9ad9'%3e%3c/circle%3e%3ccircle r='5' cx='1569.85' cy='543.31' fill='%238b9ad9'%3e%3c/circle%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1248'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='15.28%25' y1='-39.29%25' x2='84.72%25' y2='139.29%25' gradientUnits='userSpaceOnUse' id='SvgjsLinearGradient1249'%3e%3cstop stop-color='%230e2a47' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(22%2c 4%2c 94%2c 1)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3cradialGradient id='SvgjsRadialGradient1250'%3e%3cstop stop-color='white' offset='0.1'%3e%3c/stop%3e%3cstop stop-color='%231735b3' offset='0.2'%3e%3c/stop%3e%3cstop stop-color='rgba(23%2c 53%2c 179%2c 0)' offset='1'%3e%3c/stop%3e%3c/radialGradient%3e%3c/defs%3e%3c/svg%3e");
-    background-size: cover;
-    color: #e0e0e0;
-    font-family: 'Montserrat', sans-serif;
-    border-radius: 9px;
-    margin-top: 50px;
+.infinite-slider-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 4rem 3rem;
+  overflow: visible;
 }
 
-#proyect {
-    font-size: 2rem;
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  cursor: grab;
 }
 
-.galeria {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-
-    background-size: 400% 400%;
-    animation: gradient 12s ease infinite;
+.slider-wrapper:active {
+  cursor: grabbing;
 }
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
+.slider-track {
+  display: flex;
+  gap: 24px;
+  will-change: transform;
+  user-select: none;
 }
 
-.galeria ul {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
+.slide-item {
+  flex-shrink: 0;
+  width: 320px;
+  height: 400px;
 }
 
-.proyecto {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.project-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.image-wrapper {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover .project-image {
+  transform: scale(1.1);
+}
+
+.project-category {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: #1a202c;
+  line-height: 1.3;
+}
+
+.project-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #4a5568;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.project-tech {
+  font-size: 0.8rem;
+  color: #718096;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.project-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* FLECHAS EXTERNAS CON Z-INDEX ALTO */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(15px);
+  color: #4a5568;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-arrow:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.15);
+  color: #667eea;
+  box-shadow: 
+    0 12px 35px rgba(102, 126, 234, 0.25),
+    0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.nav-arrow-left {
+  left: -28px;
+}
+
+.nav-arrow-right {
+  right: -28px;
+}
+
+.pagination-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 2rem;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(102, 126, 234, 0.3);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dot.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: scale(1.3);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.dot:hover {
+  background: rgba(102, 126, 234, 0.6);
+  transform: scale(1.1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .infinite-slider-container {
+    padding: 1.5rem 3rem 2.5rem;
+  }
+  
+  .slide-item {
     width: 280px;
-    border: 1px solid #444;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #1a1a2e;
-    color: #eee;
-    transition: transform 0.3s;
-    text-align: center;
+  }
+  
+  .nav-arrow {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .nav-arrow-left {
+    left: -24px;
+  }
+  
+  .nav-arrow-right {
+    right: -24px;
+  }
 }
 
-.proyecto:hover {
-    transform: scale(1.05);
+@media (max-width: 768px) {
+  .infinite-slider-container {
+    padding: 1rem 2.5rem 2rem;
+  }
+  
+  .slider-track {
+    gap: 16px;
+  }
+  
+  .slide-item {
+    width: 250px;
+  }
+  
+  .nav-arrow {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .nav-arrow-left {
+    left: -22px;
+  }
+  
+  .nav-arrow-right {
+    right: -22px;
+  }
 }
 
-.proyecto img {
-    width: 100%;
-    height: auto;
+@media (max-width: 480px) {
+  .infinite-slider-container {
+    padding: 1rem 2rem 2rem;
+  }
+  
+  .slide-item {
+    width: 280px;
+  }
+  
+  .nav-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .nav-arrow-left {
+    left: -20px;
+  }
+  
+  .nav-arrow-right {
+    right: -20px;
+  }
 }
 
-.proyecto-info {
-    padding: 15px;
-    text-align: center;
+.study-projects-title {
+  margin-top: 4rem;
+  color: #ffffff;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
 }
-
-.proyecto-info h3 {
-    margin: 10px 0;
-    font-size: 1.2em;
-    color:#fff;
-}
-
-.proyecto-info p {
-    font-size: 0.95em;
-    color: #bbb;
-}
-
-.proyecto-links {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.btn-ver-mas {
-    background-color: #6c63ff;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-    text-align: center;
-    display: inline-block;
-}
-
-.btn-ver-mas:hover {
-    background-color: #0056b3;
-}
-.proyecto-tecnologias {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.tecnologia {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.85em;
-    color: #fff;
-}
-
-.tecnologia img {
-    width: 22px;
-    height: 22px;
-    margin-bottom: 2.5px;
-}
-
-.tecnologia span {
-    font-size: 0.8em;
-    text-align: center;
-    color: #ddd;
-    margin-bottom: 10px;
-}
-
 </style>

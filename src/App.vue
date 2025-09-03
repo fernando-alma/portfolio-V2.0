@@ -1,44 +1,21 @@
 <!-- App.vue -->
 <template>
   <div id="app">
-    <NavBar />
-    <About />
-    <Education />
-    <Projects />
-    <Contact />
-    <Technologies />
-   
+    <router-view />
+    <footer>
+      <p>©2025 Fernando Alma - Desarrollo Web - Soulware Argentina </p>
+    </footer>
   </div>
-
-  <footer>
-    <p>©2025 Fernando Alma - Desarrollo Web - Soulware Argentina </p>
-  </footer>
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue';
-import About from "./components/About.vue";
-import Projects from "./components/Projects.vue";
-import Contact from "./components/Contact.vue";
-import Education from "./components/Education.vue";
-import Technologies from "./components/Technologies.vue";
-
 export default {
-  name: "App",
-  components: {
-    NavBar,
-    About,
-    Projects,
-    Contact,
-    Education,
-    Technologies,
-  },
-};
+  name: "App"
+}
 </script>
 
 <style>
-
-body { 
+body {
   background-color: #1a1a2e;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -49,6 +26,7 @@ body {
   color: #333;
   text-align: center;
 }
+
 header {
   background-color: #3209c7;
   color: white;

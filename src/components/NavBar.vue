@@ -2,8 +2,16 @@
     <nav class="navbar">
       <div class="navbar-menu">
         <ul class="nav-list">
+          <li>
+            <router-link to="/" class="nav-item">Inicio</router-link>
+          </li>
           <li v-for="nav in navegacion" :key="nav.id">
-            <a :href="nav.enlace" class="nav-item">{{ nav.nombre }}</a>
+            <router-link :to="{ path: '/', hash: nav.enlace }" class="nav-item">
+              {{ nav.nombre }}
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/portfolio-completo" class="nav-item">Portfolio Completo</router-link>
           </li>
         </ul>
       </div>
@@ -31,7 +39,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 7px;
-    z-index: 10; /* Asegura que el navbar esté encima de otros elementos */
+    z-index: 100; /* Asegura que el navbar esté encima de otros elementos */
     margin-top: 5px;
     margin-bottom: 10px;
     
@@ -81,4 +89,3 @@
     }
   }
   </style>
-  
