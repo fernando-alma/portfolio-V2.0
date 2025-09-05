@@ -117,11 +117,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Desarrollo de sitio web corporativo con enfoque en productos naturales y herbolarios.',
           technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/herbo.png"),
           author: {
-            name: 'UNDER Team',
+            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -132,11 +132,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Plataforma web para empresa de servicios con integración de sistema de contacto.',
           technologies: ['WordPress', 'PHP', 'MySQL', 'Bootstrap'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/franchi.png"),
           author: {
-            name: 'UNDER Team',
+            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -147,11 +147,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Sitio web industrial con catálogo de productos y sistema de consultas.',
           technologies: ['WordPress', 'WooCommerce', 'CSS3', 'jQuery'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/durox.png"),
           author: {
-            name: 'UNDER Team',
+           name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -162,11 +162,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Portal web corporativo con gestión de contenido y galería de proyectos.',
           technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/dsg.png"),
           author: {
-            name: 'UNDER Team',
+            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -177,11 +177,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'E-commerce moderno con sistema de pagos integrado y diseño responsive.',
           technologies: ['WordPress', 'WooCommerce', 'Stripe', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/xoxo.png"),
           author: {
-            name: 'UNDER Team',
+             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -192,11 +192,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Sitio web premium para marca de bebidas con experiencia inmersiva.',
           technologies: ['WordPress', 'PHP', 'GSAP', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/chivas.png"),
           author: {
-            name: 'UNDER Team',
+             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -207,11 +207,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Portal de almacenamiento con sistema de inventario y gestión online.',
           technologies: ['WordPress', 'PHP', 'MySQL', 'JavaScript'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/eldeposito.png"),
           author: {
-            name: 'UNDER Team',
+           name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -222,11 +222,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Sitio institucional con información de servicios y contacto empresarial.',
           technologies: ['WordPress', 'PHP', 'CSS3', 'Bootstrap'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/nuevopuente.png"),
           author: {
-            name: 'UNDER Team',
+             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -237,11 +237,11 @@ export default {
           agency: 'UNDER - AGENCIA',
           description: 'Portal inmobiliario con búsqueda avanzada y galería de propiedades.',
           technologies: ['WordPress', 'PHP', 'Google Maps', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/remax.png"),
           author: {
-            name: 'UNDER Team',
+             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         
@@ -254,11 +254,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Plataforma corporativa con múltiples secciones y sistema de gestión.',
           technologies: ['WordPress', 'PHP', 'MySQL', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/grupomas.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+           name: 'UNDER Agency',
+            role: 'Agencia de Marketing',
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -269,11 +269,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Sitio web profesional con portafolio de servicios y testimonios.',
           technologies: ['WordPress', 'PHP', 'jQuery', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/mastroeni.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+            name: 'UNDER Agency',
+            role: 'Agencia de Marketing',
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -284,11 +284,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Portal web con enfoque en servicios especializados y contacto directo.',
           technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/galea.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+             name: 'UNDER Agency',
+            role: 'Agencia de Marketing',
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -299,11 +299,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Sitio web creativo con diseño moderno y funcionalidades avanzadas.',
           technologies: ['WordPress', 'PHP', 'GSAP', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/paralelo.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+             name: 'UNDER Agency',
+            role: 'Agencia de Marketing',
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -314,11 +314,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Plataforma web para empresa de servicios con integración multimedia.',
           technologies: ['WordPress', 'PHP', 'CSS3', 'Bootstrap'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/remax.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+             name: 'UNDER Agency',
+            role: 'Agencia de Marketing',
+            avatar: require("@/assets/img/underava.png"),
           }
         },
         {
@@ -329,11 +329,11 @@ export default {
           agency: 'SOULWARE',
           description: 'E-commerce floral con catálogo de productos y sistema de pedidos.',
           technologies: ['WordPress', 'WooCommerce', 'PHP', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/casitadeflor.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+          name: 'SOULWARE',
+            role: 'Marca Personal', 
+            avatar: require("@/assets/img/soulava.png"),
           }
         },
         {
@@ -344,11 +344,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Portal corporativo industrial con información técnica y contactos.',
           technologies: ['WordPress', 'PHP', 'MySQL', 'CSS3'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/termet.png"),
           author: {
             name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+            role: 'Marca Personal', 
+            avatar: require("@/assets/img/soulava.png"),
           }
         },
         {
@@ -359,11 +359,11 @@ export default {
           agency: 'SOULWARE',
           description: 'Sitio web profesional con gestión de contenido y diseño responsive.',
           technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/victoria.png"),
           author: {
-            name: 'SOULWARE',
-            role: 'Desarrollo Personal',
-            avatar: '/api/placeholder/40/40'
+           name: 'SOULWARE',
+            role: 'Marca Personal', 
+            avatar: require("@/assets/img/soulava.png"),
           }
         },
         
@@ -373,14 +373,14 @@ export default {
           title: 'App de Gestión de Turnos Médicos',
           category: 'fullstack',
           categoryLabel: 'Full Stack',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Sistema completo para gestión de citas médicas con panel administrativo.',
           technologies: ['Vue.js', 'Node.js', 'MongoDB', 'Express'],
           image: '/api/placeholder/400/300',
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Full Stack Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         
@@ -390,14 +390,14 @@ export default {
           title: 'App de Homebanking',
           category: 'backend',
           categoryLabel: 'Backend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'API REST para sistema bancario con seguridad avanzada y transacciones.',
           technologies: ['Node.js', 'Express', 'MongoDB', 'JWT'],
           image: '/api/placeholder/400/300',
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -405,14 +405,14 @@ export default {
           title: 'Foro Hub',
           category: 'backend',
           categoryLabel: 'Backend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Backend para foro de discusión con sistema de autenticación y moderación.',
           technologies: ['Java', 'Spring Boot', 'MySQL', 'JWT'],
           image: '/api/placeholder/400/300',
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -420,14 +420,14 @@ export default {
           title: 'LiterAlura',
           category: 'backend',
           categoryLabel: 'Backend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'API para gestión de biblioteca digital con búsqueda avanzada de libros.',
           technologies: ['Java', 'Spring Boot', 'PostgreSQL', 'REST'],
           image: '/api/placeholder/400/300',
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -435,14 +435,14 @@ export default {
           title: 'Conversor de Monedas',
           category: 'backend',
           categoryLabel: 'Backend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'API para conversión de monedas con tasas de cambio en tiempo real.',
           technologies: ['Python', 'FastAPI', 'APIs Externas', 'Redis'],
           image: '/api/placeholder/400/300',
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -450,14 +450,14 @@ export default {
           title: 'Facemask Detection',
           category: 'backend',
           categoryLabel: 'Backend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Sistema de detección de mascarillas usando inteligencia artificial.',
           technologies: ['Python', 'OpenCV', 'TensorFlow', 'Flask'],
           image: '/api/placeholder/400/300',
           author: {
-            name: 'SOULWARE',
-            role: 'AI Developer',
-            avatar: '/api/placeholder/40/40'
+            name: 'Fernando Alma',
+            role: 'Backend Developer',
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         
@@ -467,14 +467,14 @@ export default {
           title: 'Amigo Secreto',
           category: 'frontend',
           categoryLabel: 'Frontend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Aplicación interactiva para organizar intercambios de regalos.',
           technologies: ['HTML5', 'CSS3', 'JavaScript', 'LocalStorage'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/amigosecreto.png"),
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Frontend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -482,14 +482,14 @@ export default {
           title: 'Pokedesk',
           category: 'frontend',
           categoryLabel: 'Frontend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Pokédex interactiva con búsqueda y detalles de Pokémon.',
           technologies: ['React', 'CSS3', 'PokeAPI', 'Axios'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/poke.png"),
           author: {
-            name: 'SOULWARE',
+              name: 'Fernando Alma',
             role: 'Frontend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -497,14 +497,14 @@ export default {
           title: 'Juego AVATAR',
           category: 'frontend',
           categoryLabel: 'Frontend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Juego interactivo basado en el universo de Avatar con animaciones.',
           technologies: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'GSAP'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/amigosecreto.png"),
           author: {
-            name: 'SOULWARE',
+              name: 'Fernando Alma',
             role: 'Game Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         },
         {
@@ -512,14 +512,14 @@ export default {
           title: 'McDonalds Replic',
           category: 'frontend',
           categoryLabel: 'Frontend',
-          agency: 'SOULWARE',
+          agency: 'Proyecto de estudio',
           description: 'Réplica del sitio web de McDonalds con diseño responsive.',
           technologies: ['HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
-          image: '/api/placeholder/400/300',
+          image: require("@/assets/img/mac.png"),
           author: {
-            name: 'SOULWARE',
+            name: 'Fernando Alma',
             role: 'Frontend Developer',
-            avatar: '/api/placeholder/40/40'
+            avatar: require("@/assets/img/ferava.png"),
           }
         }
       ]

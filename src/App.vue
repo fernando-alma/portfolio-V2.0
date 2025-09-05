@@ -17,14 +17,18 @@ export default {
 <style>
 body {
   background-color: #1a1a2e;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 #app {
   font-family: Arial, sans-serif;
   color: #333;
   text-align: center;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-top: 0.5rem; /* Altura del navbar */
 }
 
 header {

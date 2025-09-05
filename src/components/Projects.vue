@@ -206,46 +206,46 @@ export default {
       originalProjects: [
         { 
           id: 1,
-          name: "Herbo", 
+          name: "Casita de Flor", 
           description: "Ecommerce para venta de baterías de autos y motos.", 
-          link: "https://herbomendoza.com.ar/",
-          image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=250&fit=crop",
+          link: "https://casitadeflor.com/",
+          image: require("@/assets/img/casitadeflor.png"),
           category: "Ecommerce",
-          technologies: ["Vue.js", "CSS", "HTML"]
+          technologies: ["Wordpress","Elementor","Woocommerce"]
         },
         { 
           id: 2,
-          name: "Franchi", 
+          name: "Termet SA", 
           description: "Sistema interno de carga de propiedades inmobiliarias con integración API.", 
           link: "https://inmobiliariafranchi.com/",
-          image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop",
+          image: require("@/assets/img/termet.png"),
           category: "Sistema Web",
           technologies: ["Vue.js", "API", "JavaScript"]
         },
         { 
           id: 3,
-          name: "Durox", 
+          name: "XOXO Club", 
           description: "Sitio institucional de insumos para bodegas y enología.", 
-          link: "https://sitioseis.soulware.com.ar/",
-          image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=250&fit=crop",
+          link: "https://sitiouno.soulware.com.ar/",
+          image: require("@/assets/img/xoxo.png"),
           category: "Web Institucional",
           technologies: ["Vue.js", "CSS", "HTML"]
         },
         { 
           id: 4,
-          name: "DSG", 
+          name: "Victoria Sports Management", 
           description: "Web corporativa para empresarios expertos en finanzas de México.", 
-          link: "https://sitiotres.soulware.com.ar/",
-          image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=250&fit=crop",
+          link: "https://victoriasm.com.ar/",
+          image: require("@/assets/img/victoria.png"),
           category: "Corporativa",
           technologies: ["Vue.js", "CSS", "JavaScript"]
         },
         { 
           id: 5,
-          name: "XOXO", 
+          name: "Durox", 
           description: "Sitio para discoteca en México con sistema de menú digital.", 
           link: "https://sitiouno.soulware.com.ar/",
-          image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=250&fit=crop",
+          image: require("@/assets/img/durox.png"),
           category: "Entretenimiento",
           technologies: ["Vue.js", "HTML", "CSS"]
         },
@@ -254,7 +254,7 @@ export default {
           name: "Chivas", 
           description: "Servicios integrales para la industria del petróleo, gas y minería.", 
           link: "https://servicioschivas.com.ar/",
-          image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=400&h=250&fit=crop",
+          image: require("@/assets/img/remax.png"),
           category: "Industrial",
           technologies: ["Vue.js", "API", "JavaScript"]
         }
@@ -959,6 +959,7 @@ export default {
   margin-bottom: 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;
 }
