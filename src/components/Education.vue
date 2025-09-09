@@ -1,229 +1,196 @@
-<!-- EducationSection.vue -->
-<script>
-export default {
-  name: "EducationSection"
-};
-</script>
-<script setup>
-import { ref } from 'vue';
-
-const fechaColor = ref([
-  { color: '#41516c' },
-  { color: '#FBCA3E' },
-  { color: '#E24A68' },
-  { color: '#1B5FBC' },
-  { color: '#4CADAD' }
-]);
-
-const educacion = ref([
-  { fecha: '2025', title: 'Finalización de la Tecnicatura Universitaria en Programación - Inicio de especialización Backend en JAVA en ORACLE ALURA ONE', descripcion: 'Graduación de la Tecnicatura Universitaria en Programación UTN FRSR' },
-  { fecha: '2024', title: 'Inicio de la Tecnicatura Universitaria en Programación UTN FRSR - Finalización de la Diplomatura Universitaria en Programación UTN BA', descripcion: 'Cursado del Primer año de la Tecnicatura Universitaria en Programación UTN FRSR - Graduación de la Diplomatura Universitaria en Programación UTN BA' },
-  { fecha: '2023', title: 'Inicio de la Diplomatura Universitaria en Programación UTN BA - Fundación de mi marca personal SOULWARE', descripcion: 'Introducción a tecnologías como JavaScript, HTML, CSS, Sass, React.js, Node.js, Mongo DB, MySQL, TypeScript, Express, entre otras - Inicié como Programador Web en mi marca personal de forma freelance' },
-  { fecha: '2022 - 2023', title: 'Cursado de Ingeniería Informática UM - Primer experiencia como FullStack Web Developer UNDER AGENCY', descripcion: 'Realicé el cursado de la carrera en la Universidad de Mendoza (Parcial) - Inicié mi primer trabajo como Programador Web en una agencia de Marketing Digital' },
-  { fecha: '2014 - 2021', title: 'Cursado de Ingeniería Electrónica UM - Finalización del curso de Desarrollo Web FullStack Java EGG', descripcion: 'Realicé el cursado de la carrera en la Universidad de Mendoza (Parcial) - Graduación Desarrollo Web FullStack EGG' }
-
-]);
-</script>
-
-
-
 <template>
-    <h1 id=experiencia> Experiencia </h1>
-   
-  <ul>
-    <li v-for="(item, index) in educacion" :key="index" :style="{ '--fecha-color': fechaColor[index].color }">
-      <div class="fecha">{{ item.fecha }}</div>
-      <h3 class="title">{{ item.title }}</h3>
-      <div class="descripcion">{{ item.descripcion }}</div>
-    </li>
-  </ul>
+  <div class="body-container">
+    <div class="timeline-container">
+      <h2 class="section-title">Experiencia</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="role">
+              <i class="fas fa-briefcase"></i> Programador Web FullStack
+            </h3>
+            <p class="company">
+              <i class="fas fa-building"></i> Under Agency – Agencia de Marketing Digital
+            </p>
+            <span class="date">
+              <i class="fas fa-calendar-alt"></i> Octubre 2022 – Marzo 2025
+            </span>
+            <p class="description">
+              Lideré el desarrollo y maquetado de sitios web en WordPress, incluyendo landing pages, webs institucionales, inmobiliarias y tiendas e-commerce. 
+              Gestioné servidores (WHM, cPanel), hosting, correos y DNS. Integré APIs, pasarelas de pago y personalicé backends con JetEngine. 
+              Brindé soporte técnico, resolución de bugs y mejoras continuas, liderando además un equipo de dos desarrolladores en formación.
+            </p>
+          </div>
+        </div>
 
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="role">
+              <i class="fas fa-briefcase"></i> Fundador y Programador Web FullStack
+            </h3>
+            <p class="company">
+              <i class="fas fa-building"></i> Soulware – Marca personal
+            </p>
+            <span class="date">
+              <i class="fas fa-calendar-alt"></i> Julio 2023 – Presente
+            </span>
+            <p class="description">
+              Fundé Soulware, marca personal dedicada al desarrollo de soluciones web personalizadas para clientes locales e internacionales. 
+              Gestiono proyectos de inicio a fin, incluyendo diseño UI/UX, desarrollo técnico, branding y presencia digital. 
+              Algunos proyectos destacados: Termet, Vera Reciclados, Casita de Flor y Victoria.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Educación</h2>
+      <div class="timeline">
+        <div class="timeline-item" v-for="(edu, index) in education" :key="index">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="role">
+              <i class="fas fa-graduation-cap"></i> {{ edu.role }}
+            </h3>
+            <p class="company">
+              <i class="fas fa-university"></i> {{ edu.company }}
+            </p>
+            <span class="date">
+              <i class="fas fa-calendar-alt"></i> {{ edu.date }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Certificaciones</h2>
+      <div class="timeline">
+        <div class="timeline-item" v-for="(cert, index) in certifications" :key="index">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3 class="role">
+              <i class="fas fa-certificate"></i> {{ cert.role }}
+            </h3>
+            <p class="company">
+              <i class="fas fa-building"></i> {{ cert.company }}
+            </p>
+            <span class="date">
+              <i class="fas fa-calendar-alt"></i> {{ cert.date }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
+<script>
+export default {
+  name: "Experience",
+  data() {
+    return {
+      education: [
+        { role: "Tecnicatura Superior en Programación", company: "UTN – San Rafael", date: "2024 – 2025 (último semestre)" },
+        { role: "Diplomatura en Programación Web – FullStack", company: "UTN – Buenos Aires", date: "2023 – 2024" },
+        { role: "Ingeniería en Informática", company: "Universidad de Mendoza", date: "2022 – 2023 (parcial)" },
+        { role: "Ingeniería Electrónica", company: "Universidad de Mendoza", date: "2014 – 2021 (parcial)" }
+      ],
+      certifications: [
+        { role: "ONE | Tech Foundation – Especialización Back-End", company: "Oracle & Alura Latam", date: "2025 – Actualidad" },
+        { role: "Fullstack Java", company: "Codo a Codo 4.0 – Gobierno de CABA", date: "2024" },
+        { role: "Desarrollo Web Fullstack (Java)", company: "Egg Cooperation", date: "2021" }
+      ]
+    };
+  }
+};
+</script>
+
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap");
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.body-container {
+  max-width: 100%;
 }
 
-body {
-  min-height: 100vh;
-  display: grid;
-  align-content: center;
-  gap: 2rem;
-  padding: 2rem;
-  font-family: "Poppins", sans-serif;
-  color: var(--color);
-  background: var(--bgColor);
+.timeline-container {
+  max-width: 60%;
+  margin: 0 auto;
+  padding: 1.4rem;
 }
 
-#experiencia {
- color: aliceblue;
-margin-bottom: 45px;
+.section-title {
+  text-align: left;
+  margin-top: 4rem;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #fff, #ccc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-ul {
-  --col-gap: 2rem;
-  --row-gap: 2rem;
-  --line-w: 0.25rem;
-  display: grid;
-  grid-template-columns: var(--line-w) 1fr;
-  grid-auto-columns: max-content;
-  column-gap: var(--col-gap);
-  list-style: none;
-  width: min(60rem, 90%);
-  margin-inline: auto;
-}
-
-/* line */
-ul::before {
-  content: "";
-  grid-column: 1;
-  grid-row: 1 / span 20;
-  background: rgb(225, 225, 225);
-  border-radius: calc(var(--line-w) / 2);
-}
-
-/* columns*/
-ul li:not(:last-child) {
-  margin-bottom: var(--row-gap);
-}
-
-/* card */
-ul li {
-  grid-column: 2;
-  --inlineP: 1.5rem;
-  margin-inline: var(--inlineP);
-  grid-row: span 2;
-  display: grid;
-  grid-template-rows: min-content min-content min-content;
-}
-
-/* date */
-ul li .fecha {
-  --dateH: 3rem;
-  height: var(--dateH);
-  margin-inline: calc(var(--inlineP) * -1);
-  text-align: center;
-  background-color: var(--fecha-color);
-  color: white;
-  font-size: 1.25rem;
-  font-weight: 700;
-  display: grid;
-  place-content: center;
+.timeline {
   position: relative;
-  border-radius: calc(var(--dateH) / 2) 0 0 calc(var(--dateH) / 2);
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 2px solid #ddd;
 }
 
-/* date flap */
-ul li .fecha::before {
-  content: "";
-  width: var(--inlineP);
-  aspect-ratio: 1;
-  background: var(--fecha-color);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2) 100%, transparent);
-  position: absolute;
-  top: 100%;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-  right: 0;
+.timeline-item {
+  margin-bottom: 2rem;
+  position: relative;
 }
 
-/* circle */
-ul li .fecha::after {
-  content: "";
+.timeline-dot {
   position: absolute;
-  width: 2rem;
-  aspect-ratio: 1;
-  background: var(--bgColor);
-  border: 0.3rem solid var(--fecha-color);
+  left: -30px;
+  top: 8px;
+  width: 14px;
+  height: 14px;
+  background: white;
   border-radius: 50%;
-  top: 50%;
-  transform: translate(50%, -50%);
-  right: calc(100% + var(--col-gap) + var(--line-w) / 2);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(50, 9, 199, 0.44);
 }
 
-/* title & description */
-ul li .title,
-ul li .descripcion {
-    color: aliceblue;
-  background: var(--bgColor);
-  position: relative;
-  padding-inline: 1.5rem;
+.timeline-content {
+  background: #3209c7;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-ul li .title {
-  overflow: hidden;
-  padding-block-start: 1.5rem;
-  padding-block-end: 1rem;
-  font-weight: 500;
+.role {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #ffffff;
+}
+
+.company {
+  text-align: left;
+  font-size: 1.3rem;
+  color: #ffffff;
+  margin-bottom: 0.3rem;
+}
+
+.date {
+  text-align: left;
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.description {
+  text-align: left;
   font-size: 1.2rem;
+  line-height: 1.5;
+  color: #ffffff;
 }
 
-ul li .descripcion {
-  padding-block-end: 1.5rem;
-  font-weight: 300;
-  font-size: 1rem;
-}
-
-/* shadows */
-ul li .title::before,
-ul li .descripcion::before {
-  content: "";
-  position: absolute;
-  width: 90%;
-  height: 0.5rem;
-  background: rgba(0, 0, 0, 0.5);
-  left: 50%;
-  border-radius: 50%;
-  filter: blur(4px);
-  transform: translate(-50%, 50%);
-}
-
-ul li .title::before {
-  bottom: calc(100% + 0.125rem);
-}
-
-ul li .descripcion::before {
-  z-index: -1;
-  bottom: 0.25rem;
-}
-
-@media (min-width: 40rem) {
-  ul {
-    grid-template-columns: 1fr var(--line-w) 1fr;
-  }
-  ul::before {
-    grid-column: 2;
-  }
-  ul li:nth-child(odd) {
-    grid-column: 1;
-  }
-  ul li:nth-child(even) {
-    grid-column: 3;
-  }
-
-  /* start second card */
-  ul li:nth-child(2) {
-    grid-row: 2/4;
-  }
-
-  ul li:nth-child(odd) .fecha::before {
-    clip-path: polygon(0 0, 100% 0, 100% 100%);
-    left: 0;
-  }
-
-  ul li:nth-child(odd) .fecha::after {
-    transform: translate(-50%, -50%);
-    left: calc(100% + var(--col-gap) + var(--line-w) / 2);
-  }
-
-  ul li:nth-child(odd) .fecha {
-    border-radius: 0 calc(var(--dateH) / 2) calc(var(--dateH) / 2) 0;
-  }
+i {
+  margin-right: 8px;
 }
 </style>
+
+

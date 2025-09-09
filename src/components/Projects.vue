@@ -1,6 +1,8 @@
 <template>
   <!-- Primer slider - Proyectos profesionales -->
-  <h1 id="experiencia">Algunos de mis proyectos profesionales</h1>
+  
+  <h1 class="study-projects-title">Algunos de mis proyectos profesionales</h1>
+  <h3 class="short-description-title"> Proyectos profesionales realizados bajo mi marca personal Soulware y en colaboración con la agencia de marketing digital Under Agency.</h3>
   <div class="infinite-slider-container" ref="sliderContainer">
     <div class="slider-wrapper" ref="sliderWrapper">
       <div 
@@ -86,6 +88,8 @@
   
   <!-- Segundo slider - Proyectos de estudio -->
   <h1 class="study-projects-title">Algunos de mis proyectos de estudio</h1>
+    <h3 class="short-description-title">Proyectos académicos desarrollados con fines de aprendizaje y perfeccionamiento de habilidades técnicas.</h3>
+
   <div class="infinite-slider-container" ref="sliderContainer2">
     <div class="slider-wrapper" ref="sliderWrapper2">
       <div 
@@ -170,10 +174,15 @@
   </div>
   <!-- Botón para ver todos -->
     <div class="view-all-section">
-      <router-link to="/portfolio-completo" class="btn-view-all">
-         Ver Portfolio Completo
-      </router-link>
-    </div>
+     <!-- Botón de portfolio completo -->
+          <router-link 
+            to="/portfolio-completo" 
+            class="portfolio-btn">
+            Ver portfolio completo
+          </router-link>
+        </div>
+    
+          
 </template>
 
 <script>
@@ -664,6 +673,36 @@ export default {
 </script>
 
 <style scoped>
+.portfolio-btn {display: inline-block;
+  padding: 12px 24px;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: fit-content;
+  min-width: 200px; 
+  margin-bottom: 2.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+} 
+
+  .portfolio-btn:hover {
+    background-color: #736deb;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(108, 99, 255, 0.3); 
+  }
+
+
+.short-description-title {
+  text-align: center;
+  font-size: 1.35rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+
+
 .infinite-slider-container {
   position: relative;
   width: 100%;
