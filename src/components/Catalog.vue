@@ -39,7 +39,7 @@
                   Ver Proyecto
                 </button>
                 <button class="action-btn secondary" @click="viewDetails(project)">
-                  Detalles
+                  GitHub
                 </button>
               </div>
             </div>
@@ -83,9 +83,13 @@
                 <span class="author-name">{{ project.author.name }}</span>
                 <span class="author-role">{{ project.author.role }}</span>
               </div>
-              <button class="read-more-btn" @click="viewDetails(project)">
-                Leer Más
+              <div class="bottom-buttons">
+                <button class="read-more-btn" @click="viewDetails(project)">
+                Ver Proyecto
               </button>
+              <button class="read-more-btn" @click="viewDetails(project)">
+                GitHub
+              </button></div>
             </div>
           </div>
         </div>
@@ -108,20 +112,19 @@ export default {
     return {
       activeFilter: 'all',
       projects: [
-        // WordPress Projects - UNDER AGENCIA
         {
           id: 1,
           title: 'Herbo',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Desarrollo de sitio web corporativo con enfoque en productos naturales y herbolarios.',
-          technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
+          agency: 'UNDER AGENCY', // Cambiado
+          description: 'E-commerce de baterías para autos y motos.',
+          technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/herbo.png"),
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -129,14 +132,14 @@ export default {
           title: 'Franchi',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Plataforma web para empresa de servicios con integración de sistema de contacto.',
-          technologies: ['WordPress', 'PHP', 'MySQL', 'Bootstrap'],
+          agency: 'UNDER AGENCY', // Cambiado
+          description: 'Web inmobiliaria con sistema interno y API de propiedades.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/franchi.png"),
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -144,14 +147,14 @@ export default {
           title: 'Durox',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Sitio web industrial con catálogo de productos y sistema de consultas.',
-          technologies: ['WordPress', 'WooCommerce', 'CSS3', 'jQuery'],
+          agency: 'UNDER AGENCY',
+          description: 'Sitio institucional de insumos para bodegas y enología.',
+          technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/durox.png"),
           author: {
            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -159,14 +162,14 @@ export default {
           title: 'DSG',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Portal web corporativo con gestión de contenido y galería de proyectos.',
-          technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
+          agency: 'UNDER AGENCY',
+          description: 'Web corporativa para empresarios expertos en finanzas.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/dsg.png"),
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -174,14 +177,14 @@ export default {
           title: 'XOXO',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'E-commerce moderno con sistema de pagos integrado y diseño responsive.',
-          technologies: ['WordPress', 'WooCommerce', 'Stripe', 'CSS3'],
+          agency: 'UNDER AGENCY',
+          description: 'Sitio para discoteca con sistema interno de menú digital.',
+          technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/xoxo.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -189,14 +192,14 @@ export default {
           title: 'Chivas',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Sitio web premium para marca de bebidas con experiencia inmersiva.',
-          technologies: ['WordPress', 'PHP', 'GSAP', 'CSS3'],
+          agency: 'UNDER AGENCY',
+          description: 'Web institucional de servicios industriales y energéticos.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/chivas.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -204,14 +207,14 @@ export default {
           title: 'El Deposito',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Portal de almacenamiento con sistema de inventario y gestión online.',
-          technologies: ['WordPress', 'PHP', 'MySQL', 'JavaScript'],
+          agency: 'UNDER AGENCY',
+          description: 'Sitio institucional de distribución mayorista ferretera.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/eldeposito.png"),
           author: {
            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -219,14 +222,14 @@ export default {
           title: 'Nuevo Puente',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Sitio institucional con información de servicios y contacto empresarial.',
-          technologies: ['WordPress', 'PHP', 'CSS3', 'Bootstrap'],
+          agency: 'UNDER AGENCY',
+          description: 'Web institucional para tradicional fiambrería mendocina.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/nuevopuente.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -234,14 +237,14 @@ export default {
           title: 'REMAX',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER - AGENCIA',
-          description: 'Portal inmobiliario con búsqueda avanzada y galería de propiedades.',
-          technologies: ['WordPress', 'PHP', 'Google Maps', 'CSS3'],
+          agency: 'UNDER AGENCY',
+          description: 'Sitio institucional de venta y alquiler de propiedades.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/remax.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         
@@ -252,13 +255,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Plataforma corporativa con múltiples secciones y sistema de gestión.',
-          technologies: ['WordPress', 'PHP', 'MySQL', 'CSS3'],
+          description: 'Sitio institucional de proyectos inmobiliarios en Mendoza.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/grupomas.png"),
           author: {
            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -267,13 +270,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Sitio web profesional con portafolio de servicios y testimonios.',
-          technologies: ['WordPress', 'PHP', 'jQuery', 'CSS3'],
+          description: 'Web institucional con catálogo de vinos de bodega.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/mastroeni.png"),
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -282,13 +285,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Portal web con enfoque en servicios especializados y contacto directo.',
-          technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
+          description: 'Inmobiliaria con sistema de carga y sincronización de propiedades.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/galea.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -297,13 +300,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Sitio web creativo con diseño moderno y funcionalidades avanzadas.',
-          technologies: ['WordPress', 'PHP', 'GSAP', 'CSS3'],
+          description: 'Sitio institucional de proyectos inmobiliarios innovadores.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/paralelo.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -312,13 +315,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Plataforma web para empresa de servicios con integración multimedia.',
-          technologies: ['WordPress', 'PHP', 'CSS3', 'Bootstrap'],
+          description: 'Web inmobiliaria para campaña Hot Sale de Remax Solutions.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/remax.png"),
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
-            avatar: require("@/assets/img/underava.png"),
+            avatar: require("@/assets/icons/underava.png"),
           }
         },
         {
@@ -327,13 +330,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'E-commerce floral con catálogo de productos y sistema de pedidos.',
-          technologies: ['WordPress', 'WooCommerce', 'PHP', 'CSS3'],
+          description: 'E-commerce de arreglos florales y regalos especiales.',
+          technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/casitadeflor.png"),
           author: {
           name: 'SOULWARE',
             role: 'Marca Personal', 
-            avatar: require("@/assets/img/soulava.png"),
+            avatar: require("@/assets/icons/soulava.png"),
           }
         },
         {
@@ -342,13 +345,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Portal corporativo industrial con información técnica y contactos.',
-          technologies: ['WordPress', 'PHP', 'MySQL', 'CSS3'],
+          description: 'Web institucional de ingeniería en refrigeración y procesos.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/termet.png"),
           author: {
             name: 'SOULWARE',
             role: 'Marca Personal', 
-            avatar: require("@/assets/img/soulava.png"),
+            avatar: require("@/assets/icons/soulava.png"),
           }
         },
         {
@@ -357,13 +360,13 @@ export default {
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'SOULWARE',
-          description: 'Sitio web profesional con gestión de contenido y diseño responsive.',
-          technologies: ['WordPress', 'PHP', 'CSS3', 'JavaScript'],
+          description: 'Web de sport management y representación deportiva.',
+          technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/victoria.png"),
           author: {
            name: 'SOULWARE',
             role: 'Marca Personal', 
-            avatar: require("@/assets/img/soulava.png"),
+            avatar: require("@/assets/icons/soulava.png"),
           }
         },
         
@@ -374,13 +377,13 @@ export default {
           category: 'fullstack',
           categoryLabel: 'Full Stack',
           agency: 'Proyecto de estudio',
-          description: 'Sistema completo para gestión de citas médicas con panel administrativo.',
+          description: 'App para agenda médica y administración de turnos.',
           technologies: ['Vue.js', 'Node.js', 'MongoDB', 'Express'],
           image: '/api/placeholder/400/300',
           author: {
             name: 'Fernando Alma',
             role: 'Full Stack Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         
@@ -391,13 +394,13 @@ export default {
           category: 'backend',
           categoryLabel: 'Backend',
           agency: 'Proyecto de estudio',
-          description: 'API REST para sistema bancario con seguridad avanzada y transacciones.',
+          description: 'Plataforma bancaria con pagos, transferencias y consultas.',
           technologies: ['Node.js', 'Express', 'MongoDB', 'JWT'],
           image: '/api/placeholder/400/300',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -406,13 +409,13 @@ export default {
           category: 'backend',
           categoryLabel: 'Backend',
           agency: 'Proyecto de estudio',
-          description: 'Backend para foro de discusión con sistema de autenticación y moderación.',
+          description: 'Foro educativo con usuarios, categorías y gestión de temas.',
           technologies: ['Java', 'Spring Boot', 'MySQL', 'JWT'],
           image: '/api/placeholder/400/300',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -421,13 +424,13 @@ export default {
           category: 'backend',
           categoryLabel: 'Backend',
           agency: 'Proyecto de estudio',
-          description: 'API para gestión de biblioteca digital con búsqueda avanzada de libros.',
+          description: 'Aplicación web para explorar y organizar libros online.',
           technologies: ['Java', 'Spring Boot', 'PostgreSQL', 'REST'],
           image: '/api/placeholder/400/300',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -436,13 +439,13 @@ export default {
           category: 'backend',
           categoryLabel: 'Backend',
           agency: 'Proyecto de estudio',
-          description: 'API para conversión de monedas con tasas de cambio en tiempo real.',
+          description: 'Conversor de divisas en tiempo real con tasas actualizadas.',
           technologies: ['Python', 'FastAPI', 'APIs Externas', 'Redis'],
           image: '/api/placeholder/400/300',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -451,13 +454,13 @@ export default {
           category: 'backend',
           categoryLabel: 'Backend',
           agency: 'Proyecto de estudio',
-          description: 'Sistema de detección de mascarillas usando inteligencia artificial.',
+          description: 'App de IA para detección de uso de mascarillas.',
           technologies: ['Python', 'OpenCV', 'TensorFlow', 'Flask'],
           image: '/api/placeholder/400/300',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         
@@ -468,13 +471,13 @@ export default {
           category: 'frontend',
           categoryLabel: 'Frontend',
           agency: 'Proyecto de estudio',
-          description: 'Aplicación interactiva para organizar intercambios de regalos.',
+          description: 'Plataforma online para organizar sorteos de amigo secreto.',
           technologies: ['HTML5', 'CSS3', 'JavaScript', 'LocalStorage'],
           image: require("@/assets/img/amigosecreto.png"),
           author: {
             name: 'Fernando Alma',
             role: 'Frontend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -483,13 +486,13 @@ export default {
           category: 'frontend',
           categoryLabel: 'Frontend',
           agency: 'Proyecto de estudio',
-          description: 'Pokédex interactiva con búsqueda y detalles de Pokémon.',
+          description: 'Aplicación interactiva con información y filtros de Pokémon.',
           technologies: ['React', 'CSS3', 'PokeAPI', 'Axios'],
           image: require("@/assets/img/poke.png"),
           author: {
               name: 'Fernando Alma',
             role: 'Frontend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -498,13 +501,13 @@ export default {
           category: 'frontend',
           categoryLabel: 'Frontend',
           agency: 'Proyecto de estudio',
-          description: 'Juego interactivo basado en el universo de Avatar con animaciones.',
+          description: 'Videojuego de aventura y combate inspirado en AVATAR.',
           technologies: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'GSAP'],
           image: require("@/assets/img/amigosecreto.png"),
           author: {
               name: 'Fernando Alma',
             role: 'Game Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         },
         {
@@ -513,13 +516,13 @@ export default {
           category: 'frontend',
           categoryLabel: 'Frontend',
           agency: 'Proyecto de estudio',
-          description: 'Réplica del sitio web de McDonalds con diseño responsive.',
+          description: 'Réplica web interactiva del menú digital de McDonald\'s.',
           technologies: ['HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
           image: require("@/assets/img/mac.png"),
           author: {
             name: 'Fernando Alma',
             role: 'Frontend Developer',
-            avatar: require("@/assets/img/ferava.png"),
+            avatar: require("@/assets/icons/ferava.png"),
           }
         }
       ]
@@ -533,11 +536,11 @@ export default {
       const fullstackCount = this.projects.filter(p => p.category === 'fullstack').length;
       
       return [
-        { key: 'all', label: 'Todos', icon: '🎯', count: this.projects.length },
-        { key: 'wordpress', label: 'WordPress', icon: '🌐', count: wordpressCount },
-        { key: 'fullstack', label: 'Full Stack', icon: '⚡', count: fullstackCount },
-        { key: 'backend', label: 'Backend', icon: '🔧', count: backendCount },
-        { key: 'frontend', label: 'Frontend', icon: '🎨', count: frontendCount }
+        { key: 'all', label: 'Todos', icon: '', count: this.projects.length },
+        { key: 'wordpress', label: 'WordPress', icon: '', count: wordpressCount },
+        { key: 'fullstack', label: 'Full Stack', icon: '', count: fullstackCount },
+        { key: 'backend', label: 'Backend', icon: '', count: backendCount },
+        { key: 'frontend', label: 'Frontend', icon: '', count: frontendCount }
       ];
     },
     filteredProjects() {
@@ -557,7 +560,7 @@ export default {
     },
     viewDetails(project) {
       // Implementar lógica para ver detalles
-      console.log('Ver detalles:', project.title);
+      console.log('Ver GitHub:', project.title);
     }
   }
 }
@@ -600,6 +603,7 @@ export default {
   margin-bottom: 3rem;
   display: flex;
   justify-content: center;
+  
 }
 
 .filters {
@@ -613,7 +617,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
+  padding: 0.40rem 1.0rem;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
@@ -625,13 +629,13 @@ export default {
 }
 
 .filter-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(128, 5, 235, 0.082);
   transform: translateY(-2px);
 }
 
 .filter-btn.active {
   background: rgba(255, 255, 255, 0.9);
-  color: #667eea;
+  color: rgb(43, 5, 235);
   border-color: white;
 }
 
@@ -647,7 +651,7 @@ export default {
 }
 
 .filter-btn.active .project-count {
-  background: #667eea;
+  background: rgb(43, 5, 235);
   color: white;
 }
 
@@ -658,17 +662,17 @@ export default {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 2rem;
 }
 
 .project-card {
-  background: white;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  background: hsla(253, 94%, 21%, 0.444);
+  
 }
 
 .project-card:hover {
@@ -701,7 +705,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(102, 126, 234, 0.9);
+  background: rgba(54, 7, 208, 0.778);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -716,10 +720,11 @@ export default {
 .overlay-content {
   display: flex;
   gap: 1rem;
+  
 }
 
 .action-btn {
-  padding: 0.8rem 1.5rem;
+  padding: 0.25rem 1.0rem;
   border: 2px solid white;
   border-radius: 25px;
   cursor: pointer;
@@ -731,12 +736,14 @@ export default {
 
 .action-btn.primary {
   background: white;
-  color: #667eea;
+  color: rgb(54, 7, 208);
+  font-weight: 800;
 }
 
 .action-btn.secondary {
   background: transparent;
   color: white;
+  font-weight: 800;
 }
 
 .action-btn:hover {
@@ -745,7 +752,8 @@ export default {
 
 /* Project Content */
 .project-content {
-  padding: 1.5rem;
+  padding: 1.9rem;
+
 }
 
 .category-tags {
@@ -792,16 +800,16 @@ export default {
   border: 2px solid;
 }
 
-.agency-tag.under---agencia {
-  border-color: #ff6b6b;
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
+.agency-tag.under-agency {
+  border-color: #fff36b;
+  color: #f8f2dd;
+  background: rgba(245, 221, 4, 0.1);
 }
 
 .agency-tag.soulware {
-  border-color: #4ecdc4;
-  color: #4ecdc4;
-  background: rgba(78, 205, 196, 0.1);
+  border-color: #9f4df7;
+  color: #ffffff;
+  background: rgba(129, 88, 233, 0.484);
 }
 
 .project-title {
@@ -838,6 +846,7 @@ export default {
 /* Author Info */
 .author-info {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 0.8rem;
 }
@@ -873,6 +882,12 @@ export default {
   font-size: 0.8rem;
 }
 
+.bottom-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
 .read-more-btn {
   background: linear-gradient(45deg, #667eea, #764ba2);
   color: white;
@@ -895,6 +910,7 @@ export default {
   text-align: center;
   padding: 4rem 2rem;
   color: white;
+  
 }
 
 .empty-icon {
@@ -935,9 +951,17 @@ export default {
 /* Responsive Design */
 @media (max-width: 1200px) {
   .grid-container {
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
   }
+  /* Author Info */
+.author-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8rem;
+}
+
 }
 
 @media (max-width: 768px) {
@@ -1009,8 +1033,8 @@ export default {
   }
   
   .author-info {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
   }
 }
@@ -1046,7 +1070,6 @@ export default {
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .project-card {
-    background: #1a1a1a;
     color: #ffffff;
   }
   
