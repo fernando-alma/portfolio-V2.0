@@ -9,16 +9,21 @@
             <h3 class="role">
               <i class="fas fa-briefcase"></i> Programador Web FullStack
             </h3>
-            <p class="company">
-              <i class="fas fa-building"></i> Under Agency – Agencia de Marketing Digital
-            </p>
-            <span class="date">
-              <i class="fas fa-calendar-alt"></i> Octubre 2022 – Marzo 2025
-            </span>
+            <div class="company-date">
+              <p class="company">
+                <i class="fas fa-building"></i> Under Agency – Agencia de Marketing Digital
+              </p>
+              <span class="date">
+                <i class="fas fa-calendar-alt"></i> Octubre 2022 – Marzo 2025
+              </span>
+            </div>
             <p class="description">
-              Lideré el desarrollo y maquetado de sitios web en WordPress, incluyendo landing pages, webs institucionales, inmobiliarias y tiendas e-commerce. 
-              Gestioné servidores (WHM, cPanel), hosting, correos y DNS. Integré APIs, pasarelas de pago y personalicé backends con JetEngine. 
-              Brindé soporte técnico, resolución de bugs y mejoras continuas, liderando además un equipo de dos desarrolladores en formación.
+              Lideré el desarrollo y maquetado de sitios web en WordPress, incluyendo landing pages, webs
+              institucionales, inmobiliarias y tiendas e-commerce.
+              Gestioné servidores (WHM, cPanel), hosting, correos y DNS. Integré APIs, pasarelas de pago y personalicé
+              backends con JetEngine.
+              Brindé soporte técnico, resolución de bugs y mejoras continuas, liderando además un equipo de dos
+              desarrolladores en formación.
             </p>
           </div>
         </div>
@@ -29,15 +34,19 @@
             <h3 class="role">
               <i class="fas fa-briefcase"></i> Fundador y Programador Web FullStack
             </h3>
-            <p class="company">
-              <i class="fas fa-building"></i> Soulware – Marca personal
-            </p>
-            <span class="date">
-              <i class="fas fa-calendar-alt"></i> Julio 2023 – Presente
-            </span>
+            <div class="company-date">
+              <p class="company">
+                <i class="fas fa-building"></i> Soulware – Marca personal
+              </p>
+              <span class="date">
+                <i class="fas fa-calendar-alt"></i> Julio 2023 – Presente
+              </span>
+            </div>
             <p class="description">
-              Fundé Soulware, marca personal dedicada al desarrollo de soluciones web personalizadas para clientes locales e internacionales. 
-              Gestiono proyectos de inicio a fin, incluyendo diseño UI/UX, desarrollo técnico, branding y presencia digital. 
+              Fundé Soulware, marca personal dedicada al desarrollo de soluciones web personalizadas para clientes
+              locales e internacionales.
+              Gestiono proyectos de inicio a fin, incluyendo diseño UI/UX, desarrollo técnico, branding y presencia
+              digital.
               Algunos proyectos destacados: Termet, Vera Reciclados, Casita de Flor y Victoria.
             </p>
           </div>
@@ -52,12 +61,14 @@
             <h3 class="role">
               <i class="fas fa-graduation-cap"></i> {{ edu.role }}
             </h3>
-            <p class="company">
-              <i class="fas fa-university"></i> {{ edu.company }}
-            </p>
-            <span class="date">
-              <i class="fas fa-calendar-alt"></i> {{ edu.date }}
-            </span>
+            <div class="company-date">
+              <p class="company">
+                <i class="fas fa-university"></i> {{ edu.company }}
+              </p>
+              <span class="date">
+                <i class="fas fa-calendar-alt"></i> {{ edu.date }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -70,12 +81,14 @@
             <h3 class="role">
               <i class="fas fa-certificate"></i> {{ cert.role }}
             </h3>
-            <p class="company">
-              <i class="fas fa-building"></i> {{ cert.company }}
-            </p>
-            <span class="date">
-              <i class="fas fa-calendar-alt"></i> {{ cert.date }}
-            </span>
+            <div class="company-date">
+              <p class="company">
+                <i class="fas fa-building"></i> {{ cert.company }}
+              </p>
+              <span class="date">
+                <i class="fas fa-calendar-alt"></i> {{ cert.date }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -110,15 +123,17 @@ export default {
 }
 
 .timeline-container {
-  max-width: 60%;
-  margin: 0 auto;
-  padding: 1.4rem;
+  width: 100%;              /* Ocupará todo el ancho disponible */
+  max-width: 900px;         /* Límite en pantallas grandes */
+  margin: 0 auto;           /* Centrado horizontal */
+  padding: 1.4rem;          /* Espaciado interno */
+  box-sizing: border-box;   /* Evita que el padding sume al ancho */
 }
 
 .section-title {
   text-align: left;
   margin-top: 4rem;
-  font-size: 2.5rem;
+  font-size: clamp(1.4rem, 2.7vw, 1.8rem); /* Título adaptable */
   margin-bottom: 2rem;
   font-weight: bold;
   background: linear-gradient(90deg, #fff, #ccc);
@@ -160,30 +175,43 @@ export default {
 
 .role {
   text-align: left;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+  /* Título adaptable */
   font-weight: 600;
   margin-bottom: 0.3rem;
   color: #ffffff;
 }
 
+.company-date {
+  font-size: clamp(1rem, 2vw, 1.0rem);
+  /* Subtítulo adaptable */
+  display: flex;
+  flex-direction: row;
+  /* Coloca los elementos en fila */
+  align-items: center;
+  /* Centrado vertical */
+ gap: clamp(0.3rem, 1vw, 1rem); /* Espaciado responsive */
+
+}
+
+
 .company {
   text-align: left;
-  font-size: 1.3rem;
+
   color: #ffffff;
-  margin-bottom: 0.3rem;
+
 }
 
 .date {
   text-align: left;
-  font-size: 1.1rem;
   color: #ffffff;
-  margin-bottom: 0.8rem;
   display: block;
 }
 
 .description {
   text-align: left;
-  font-size: 1.2rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.08rem);
+  /* Texto adaptable */
   line-height: 1.5;
   color: #ffffff;
 }
@@ -192,5 +220,3 @@ i {
   margin-right: 8px;
 }
 </style>
-
-

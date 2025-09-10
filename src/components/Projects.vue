@@ -694,10 +694,24 @@ export default {
     box-shadow: 0 8px 15px rgba(108, 99, 255, 0.3); 
   }
 
-
+.study-projects-title {
+  margin-top: 4rem;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.4rem, 2.7vw, 2rem); /* Título adaptable */
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
 .short-description-title {
   text-align: center;
-  font-size: 1.35rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1rem); /* Texto adaptable */
+  font-weight: 500;
   color: #ffffff;
   margin-bottom: 2rem;
 }
@@ -990,16 +1004,4 @@ export default {
   }
 }
 
-.study-projects-title {
-  margin-top: 4rem;
-  color: #ffffff;
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: bold;
-}
 </style>
