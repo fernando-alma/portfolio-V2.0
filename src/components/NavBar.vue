@@ -52,7 +52,7 @@ const closeMenu = () => {
 
 <style scoped>
 .navbar {
-  background: #3209c7;
+  background: #3209c7e4;
   color: #fff;
   padding: 1.0rem;
   position: fixed;

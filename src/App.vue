@@ -31,37 +31,19 @@ body {
   padding-top: 0.5rem; /* Altura del navbar */
 }
 
-header {
-  background-color: #3209c7;
-  color: white;
-  padding: 20px 0;
-  margin-bottom: 20px;
-}
-
 footer {
+  background-color: #3209c7;
   color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 0.5rem;
   font-size: 1.3rem;
-}
-
-footer a {
-  text-decoration: none;
-  color: #31aa12;
-  margin-bottom: 1rem;
-  font-weight: bold;
-}
-
-footer a:hover {
-  text-decoration: underline;
 }
 
 footer p {
   font-size: 1rem;
   color: #ffffff;
   text-align: center;
-  margin-top: 0.5rem;
 }
 </style>

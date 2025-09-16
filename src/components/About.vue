@@ -86,7 +86,7 @@ export default {
   font-family: 'Montserrat', sans-serif;
   overflow: hidden;
   border-radius: 10px;
-  margin-bottom: 0.5rem;
+  
   z-index: 1; /* asegura que el contenido quede arriba */
 }
 
@@ -159,7 +159,7 @@ export default {
 
 .about-info {
   margin: 0;
-  background-color: rgba(52, 14, 112, 0.381); 
+  background-color: #14095bcd;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 0px;
@@ -168,7 +168,7 @@ export default {
 
 .title {
   font-size: 2rem;
-  color: #6c63ff;
+  color: white;
   margin-bottom: 20px;
   font-weight: 700;
 }
@@ -179,7 +179,7 @@ export default {
   line-height: 1.6;
   font-size: clamp(0.9rem, 1.5vw, 1rem);
   font-family: 'Montserrat', sans-serif;
-  text-align: justify;
+  text-align: left;
 }
 
 .buttons-container {

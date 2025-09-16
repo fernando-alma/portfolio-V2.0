@@ -568,10 +568,10 @@ export default {
 
 <style scoped>
 .portfolio-catalog {
-  max-width: 1400px;
+  max-width: 85%;
   margin: 0 auto;
   padding: 2rem;
-  background: #1a1a2e;
+  background-color: #14095b;
   min-height: 100vh;
 }
 
@@ -671,7 +671,7 @@ export default {
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  background: hsla(253, 94%, 21%, 0.444);
+  background: #3209c7;
   
 }
 

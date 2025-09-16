@@ -2,8 +2,8 @@
   <div class="home-page">
     <NavBar />
     <About />
-    <Education />
     <Projects />
+    <Education />
     <Contact />
     <Technologies />
   </div>
@@ -12,7 +12,7 @@
 <script>
 import NavBar from '@/components/NavBar.vue';
 import About from "@/components/About.vue";
-import Projects from "@/components/Projects.vue";
+import Projects from "@/components/InfiniteSlider.vue";
 import Contact from "@/components/Contact.vue";
 import Education from "@/components/Education.vue";
 import Technologies from "@/components/Technologies.vue";

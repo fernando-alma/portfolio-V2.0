@@ -19,3 +19,10 @@ export default {
 }
 </script>
 
+<style>
+.portfolio-complete-page {
+  min-height: 100vh;
+  background-color: #14095b;
+  max-width: 100%;
+}
+</style>

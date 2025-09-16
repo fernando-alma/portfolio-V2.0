@@ -120,11 +120,13 @@ export default {
 <style scoped>
 .body-container {
   max-width: 100%;
+  background-color: #14095b;
+  
 }
 
 .timeline-container {
   width: 100%;              /* Ocupará todo el ancho disponible */
-  max-width: 900px;         /* Límite en pantallas grandes */
+  max-width: 1000px;         /* Límite en pantallas grandes */
   margin: 0 auto;           /* Centrado horizontal */
   padding: 1.4rem;          /* Espaciado interno */
   box-sizing: border-box;   /* Evita que el padding sume al ancho */
@@ -167,7 +169,7 @@ export default {
 }
 
 .timeline-content {
-  background: #3209c7;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
