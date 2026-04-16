@@ -1,5 +1,5 @@
 # Etapa de construcción (Build)
-FROM node:lts-alpine as build-stage
+FROM node:lts-alpine AS build-stage
 
 # Establecer el directorio de trabajo
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Etapa de producción (Production)
-FROM nginx:stable-alpine as production-stage
+FROM nginx:stable-alpine AS production-stage
 
 # Copiar los archivos construidos desde la etapa anterior
 COPY --from=build-stage /app/dist /usr/share/nginx/html
