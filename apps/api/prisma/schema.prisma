@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum EducationType {
+  EDUCATION
+  CERTIFICATION
+}
+
+// Único administrador para acceso al panel
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String   // Contraseña hasheada (bcrypt o argon2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Configuración y datos de la sección "Sobre Mí" (Mis Datos)
+model Profile {
+  id          Int      @id @default(1) // Singleton (siempre ID 1)
+  profilePic  String   // URL o path de la foto de perfil en el servidor
+  jobTitle    String   // Ej. "FullStack Developer"
+  description String   @db.Text
+  cvUrl       String?  // URL o path del archivo PDF del CV
+  githubUrl   String?
+  linkedinUrl String?
+  whatsappUrl String?
+  updatedAt   DateTime @updatedAt
+}
+
+// Historial de Experiencia Profesional
+model Experience {
+  id          Int      @id @default(autoincrement())
+  role        String   // Ej. "Programador Web FullStack"
+  company     String   // Ej. "Under Agency"
+  description String   @db.Text
+  startDate   String   // Ej. "Octubre 2022"
+  endDate     String?  // Ej. "Marzo 2025" (Null o vacío para "Presente")
+  order       Int      @default(0) // Para ordenar en el frontend
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Educación y Certificaciones unificadas para simplicidad con filtro por tipo
+model EducationCertification {
+  id        Int           @id @default(autoincrement())
+  role      String        // Título obtenido o curso
+  company   String        // Institución (ej. UTN, Oracle)
+  date      String        // Ej. "2024 – 2025" o "2025 – Actualidad"
+  type      EducationType // Enum para diferenciar educación de certificaciones
+  order     Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+// Proyectos del Catálogo
+model Project {
+  id              Int      @id @default(autoincrement())
+  title           String
+  category        String   // Categoría técnica para filtros (ej: 'wordpress', 'fullstack', 'backend', 'frontend')
+  categoryLabel   String   // Nombre legible en UI (ej: 'WordPress', 'Full Stack')
+  agency          String?  // Agencia o autor original (ej: 'UNDER AGENCY', 'SOULWARE')
+  description     String   @db.Text // Descripción corta
+  longDescription String?  @db.Text // Descripción larga detallada (Nueva funcionalidad)
+  technologies    String[] // Array nativo de PostgreSQL para tags de tecnologías
+  image           String   // Path/URL de la imagen miniatura principal
+  gallery         String[] // Array nativo de PostgreSQL para imágenes extra (Nueva funcionalidad)
+  youtubeUrl      String?  // Enlace para renderizar video en detalle (Nueva funcionalidad)
+  githubUrl       String?  // Opcional para proyectos sin código abierto (ej. WordPress)
+  webUrl          String?  // Enlace de producción
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

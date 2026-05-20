@@ -1,0 +1,11 @@
+packages:
+  - 'apps/*'
+
+allowBuilds:
+  "@parcel/watcher": true
+  "@prisma/client": true
+  "@prisma/engines": true
+  "core-js": true
+  "esbuild": true
+  "prisma": true
+  "yorkie": true
