@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminPanel() {
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const token = localStorage.getItem('token') || '';
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('projects');
 
@@ -66,17 +65,19 @@ export default function AdminPanel() {
     order: 0
   });
 
-  // Verify token on mount
+  // Verify token validity on mount - if expired/invalid redirect to login
   useEffect(() => {
     if (token) {
-      fetch('/api/profile')
-        .then((res) => {
-          if (res.status === 401) {
-            handleLogout();
-          }
-        });
+      fetch('/api/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).then((res) => {
+        if (res.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/panel-admin/login');
+        }
+      }).catch(() => {});
     }
-  }, [token]);
+  }, []);
 
   // Load active tab data
   useEffect(() => {
@@ -127,33 +128,11 @@ export default function AdminPanel() {
     setTimeout(() => setFeedback({ message: '', type: '' }), 5000);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoginError('');
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Credenciales inválidas');
-      }
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-      showFeedback('Sesión iniciada con éxito');
-    } catch (err) {
-      setLoginError(err.message);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('token');
-    setToken('');
-    setUsername('');
-    setPassword('');
+    navigate('/panel-admin/login');
   };
+
 
   // Helper for file uploads
   const handleFileUpload = async (e, onUploadSuccess) => {
@@ -339,43 +318,9 @@ export default function AdminPanel() {
     }
   };
 
-  // Login view
-  if (!token) {
-    return (
-      <div className="admin-container">
-        <form className="login-card" onSubmit={handleLogin}>
-          <h3>Acceso Panel de Administración</h3>
-          {loginError && <p className="error-msg">{loginError}</p>}
-          
-          <div className="form-group">
-            <label>Usuario</label>
-            <input 
-              type="text" 
-              placeholder="Usuario" 
-              value={username} 
-              onChange={(e) => setUsername(e.target.value)} 
-              required 
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Contraseña</label>
-            <input 
-              type="password" 
-              placeholder="Contraseña" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
-          </div>
-
-          <button type="submit" className="login-btn">Entrar</button>
-        </form>
-      </div>
-    );
-  }
 
   return (
+
     <div className="admin-container">
       {/* Header */}
       <div className="admin-header">

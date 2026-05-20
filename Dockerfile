@@ -1,32 +1,75 @@
-# Etapa de construcción (Build)
-FROM node:lts-alpine AS build-stage
+# ============================================================
+# Dockerfile - Multi-stage Build: React + Express (Monorepo)
+# ============================================================
+# Arquitectura: pnpm workspace monorepo
+#   - apps/client  → React (Vite) → se compila al dist
+#   - apps/api     → Express Node.js → sirve la API + el dist del cliente
+# ============================================================
 
-# Establecer el directorio de trabajo
+# ─────────────────────────────────────────────────────────────
+# ETAPA 1: Build del Frontend (React + Sass)
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS frontend-builder
+
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
 
-# Instalar dependencias
-RUN npm install
+# Copiar archivos de configuración del monorepo
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 
-# Copiar el resto del código
-COPY . .
+# Copiar manifests de cada workspace antes de instalar (mejor caché)
+COPY apps/client/package.json ./apps/client/
+COPY apps/api/package.json ./apps/api/
 
-# Construir la aplicación para producción
-RUN npm run build
+# Instalar TODAS las dependencias del monorepo (necesario para el build del cliente)
+RUN pnpm install --frozen-lockfile
 
-# Etapa de producción (Production)
-FROM nginx:stable-alpine AS production-stage
+# Copiar el código fuente del cliente
+COPY apps/client ./apps/client
 
-# Copiar los archivos construidos desde la etapa anterior
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Ejecutar el build de producción de React/Vite
+RUN pnpm --filter client build
 
-# Copiar la configuración personalizada de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# ─────────────────────────────────────────────────────────────
+# ETAPA 2: Imagen de Producción (Express + Frontend compilado)
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS production
 
-# Exponer el puerto 80
-EXPOSE 80
+WORKDIR /app
 
-# Comando para iniciar Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+
+# Copiar archivos de configuración del monorepo
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+
+# Copiar el package.json del API (único workspace en producción)
+COPY apps/api/package.json ./apps/api/
+
+# Instalar SOLO las dependencias de producción de la API
+RUN pnpm install --frozen-lockfile --filter api
+
+# Copiar el código fuente de la API
+COPY apps/api ./apps/api
+
+# Copiar los archivos compilados del frontend desde la etapa anterior
+# El servidor Express los sirve como archivos estáticos desde /app/apps/client/dist
+COPY --from=frontend-builder /app/apps/client/dist ./apps/client/dist
+
+# Generar el cliente de Prisma en producción
+RUN pnpm --filter api exec prisma generate
+
+# Crear el directorio de uploads (para archivos subidos por el admin)
+RUN mkdir -p ./apps/api/uploads
+
+# Exponer el puerto de la aplicación Express
+EXPOSE 3000
+
+# Variables de entorno por defecto (sobreescribibles en EasyPanel)
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Comando de inicio: levanta el servidor Express unificado
+CMD ["node", "apps/api/src/server.js"]

@@ -1,10 +1,30 @@
-node_modules
-dist
+# ─── Archivos de sistema y depuración ───────────────────────
 .git
 .gitignore
 .dockerignore
 Dockerfile
 docker-compose.yml
-npm-debug.log
 README.md
+*.log
+*.md
+
+# ─── Artefactos de build intermedios ────────────────────────
+dist
 dist.zip
+build_error.txt
+implementation_plan.md
+nginx.conf
+
+# ─── Dependencias (se reinstalan en el Dockerfile) ──────────
+node_modules
+apps/client/node_modules
+apps/api/node_modules
+apps/vue-backup/node_modules
+
+# ─── Archivos de entorno ─────────────────────────────────────
+# El .env de producción se inyecta a través de EasyPanel
+.env
+apps/api/.env
+
+# ─── Directorio de backups Vue (no necesario en producción) ──
+apps/vue-backup
