@@ -4,6 +4,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
+import authRoutes from './routes/auth.js';
+import profileRoutes from './routes/profile.js';
+import projectsRoutes from './routes/projects.js';
+import experienceRoutes from './routes/experience.js';
+import educationRoutes from './routes/education.js';
+import uploadRoutes from './routes/upload.js';
+
 // Cargar variables de entorno
 dotenv.config();
 
@@ -25,6 +32,14 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API unificada del Portfolio funcionando correctamente' });
 });
+
+// Registrar routers de API
+app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/projects', projectsRoutes);
+app.use('/api/experience', experienceRoutes);
+app.use('/api/education', educationRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // En producción, servir los archivos del frontend compilado (React)
 const clientDistPath = path.join(__dirname, '../../client/dist');
