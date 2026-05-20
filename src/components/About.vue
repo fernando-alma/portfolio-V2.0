@@ -46,7 +46,7 @@ import profilePic from '/src/assets/img/foto_perfil.jpeg'; // Imagen de perfil
           <h1 class="title">Sobre mí</h1>
           <p class="description">
             ¡Hola! Soy Fernando Gonzalo Alma Dileo, Desarrollador Web Fullstack con tres años de experiencia creando
-            sitios y aplicaciones para empresas, agencias y emprendedores. Actualmente curso el último semestre de la
+            sitios y aplicaciones para empresas, agencias y emprendedores. Recientemente graduado de la
             Tecnicatura Superior en Programación en la UTN y me encuentro en proceso de especialización en Backend con
             Java.
 
