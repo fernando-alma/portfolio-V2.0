@@ -98,8 +98,8 @@ export default {
 .technologies-section {
   /* Se define la variable aquí para asegurar su scope */
   --item-width: 120px; 
-  background-color: #14095b;
-  color: #e0e0e0;
+  background-color: white;
+  color: #14095b;
   font-family: 'Montserrat', sans-serif;
   padding: 2rem 0;
   width: 100%;
@@ -162,7 +162,7 @@ export default {
 .tech-item p {
   margin-top: 0.5rem;
   font-size: 0.8rem;
-  color: #c0c0c0;
+  /*color: #c0c0c0;*/
   text-align: center;
   white-space: nowrap;
 }

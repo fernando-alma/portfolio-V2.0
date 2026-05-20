@@ -38,7 +38,12 @@
                 <button class="action-btn primary" @click="viewProject(project)">
                   Ver Proyecto
                 </button>
-                <button class="action-btn secondary" @click="viewDetails(project)">
+                <!-- Solo mostrar el botón GitHub si no es WordPress -->
+                <button
+                  v-if="project.category !== 'wordpress'"
+                  class="action-btn secondary"
+                  @click="viewDetails(project)"
+                >
                   GitHub
                 </button>
               </div>
@@ -84,12 +89,18 @@
                 <span class="author-role">{{ project.author.role }}</span>
               </div>
               <div class="bottom-buttons">
-                <button class="read-more-btn" @click="viewDetails(project)">
-                Ver Proyecto
-              </button>
-              <button class="read-more-btn" @click="viewDetails(project)">
-                GitHub
-              </button></div>
+                <button class="read-more-btn" @click="viewProject(project)">
+                  Ver Proyecto
+                </button>
+                <!-- Solo mostrar el botón GitHub si no es WordPress -->
+                <button
+                  v-if="project.category !== 'wordpress'"
+                  class="read-more-btn"
+                  @click="viewDetails(project)"
+                >
+                  GitHub
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -117,10 +128,11 @@ export default {
           title: 'Herbo',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER AGENCY', // Cambiado
+          agency: 'UNDER AGENCY',
           description: 'E-commerce de baterías para autos y motos.',
           technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/herbo.png"),
+          link: 'https://herbomendoza.com.ar/',
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -132,10 +144,11 @@ export default {
           title: 'Franchi',
           category: 'wordpress',
           categoryLabel: 'WordPress',
-          agency: 'UNDER AGENCY', // Cambiado
+          agency: 'UNDER AGENCY',
           description: 'Web inmobiliaria con sistema interno y API de propiedades.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/franchi.png"),
+          link: 'https://franchiinmobiliaria.com.ar/',
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -151,8 +164,9 @@ export default {
           description: 'Sitio institucional de insumos para bodegas y enología.',
           technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/durox.png"),
+          link: 'https://sitioseis.soulware.com.ar/',
           author: {
-           name: 'UNDER Agency',
+            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
             avatar: require("@/assets/icons/underava.png"),
           }
@@ -166,6 +180,7 @@ export default {
           description: 'Web corporativa para empresarios expertos en finanzas.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/dsg.png"),
+          link: 'https://sitiotres.soulware.com.ar/',
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -181,6 +196,7 @@ export default {
           description: 'Sitio para discoteca con sistema interno de menú digital.',
           technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/xoxo.png"),
+          link: 'c',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -196,6 +212,7 @@ export default {
           description: 'Web institucional de servicios industriales y energéticos.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/chivas.png"),
+          link: 'https://servicioschivas.com.ar/',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -211,6 +228,7 @@ export default {
           description: 'Sitio institucional de distribución mayorista ferretera.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/eldeposito.png"),
+          link: 'https://eldeposito.com.ar/',
           author: {
            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -226,6 +244,7 @@ export default {
           description: 'Web institucional para tradicional fiambrería mendocina.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/nuevopuente.png"),
+          link: 'https://sitiodos.soulware.com.ar/',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -234,13 +253,14 @@ export default {
         },
         {
           id: 9,
-          title: 'REMAX',
+          title: 'REMAX Solutions',
           category: 'wordpress',
           categoryLabel: 'WordPress',
           agency: 'UNDER AGENCY',
           description: 'Sitio institucional de venta y alquiler de propiedades.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/remax.png"),
+          link: 'https://remaxsolutions.com.ar/',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -248,7 +268,6 @@ export default {
           }
         },
         
-        // WordPress Projects - SOULWARE
         {
           id: 10,
           title: 'Grupo Más',
@@ -258,6 +277,7 @@ export default {
           description: 'Sitio institucional de proyectos inmobiliarios en Mendoza.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/grupomas.png"),
+          link: 'https://masdesarrollos.com.ar/',
           author: {
            name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -273,6 +293,7 @@ export default {
           description: 'Web institucional con catálogo de vinos de bodega.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/mastroeni.png"),
+          link: 'https://sitiocinco.soulware.com.ar/',
           author: {
             name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -288,6 +309,7 @@ export default {
           description: 'Inmobiliaria con sistema de carga y sincronización de propiedades.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/galea.png"),
+          link: 'https://galeapropiedades.com.ar/',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -303,6 +325,7 @@ export default {
           description: 'Sitio institucional de proyectos inmobiliarios innovadores.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/paralelo.png"),
+          link: 'https://sitiocuatro.soulware.com.ar/',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
@@ -318,12 +341,14 @@ export default {
           description: 'Web inmobiliaria para campaña Hot Sale de Remax Solutions.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/remax.png"),
+          link: 'https://remaxsolutions.com.ar/',
           author: {
              name: 'UNDER Agency',
             role: 'Agencia de Marketing',
             avatar: require("@/assets/icons/underava.png"),
           }
         },
+        // WordPress Projects - SOULWARE
         {
           id: 15,
           title: 'Casita de Flor',
@@ -333,6 +358,7 @@ export default {
           description: 'E-commerce de arreglos florales y regalos especiales.',
           technologies: ['WordPress', 'Elementor', 'WooCommerce'],
           image: require("@/assets/img/casitadeflor.png"),
+          link: 'https://casitadeflor.com/',
           author: {
           name: 'SOULWARE',
             role: 'Marca Personal', 
@@ -348,6 +374,7 @@ export default {
           description: 'Web institucional de ingeniería en refrigeración y procesos.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/termet.png"),
+          link: 'https://termetsa.com.ar/',
           author: {
             name: 'SOULWARE',
             role: 'Marca Personal', 
@@ -363,6 +390,7 @@ export default {
           description: 'Web de sport management y representación deportiva.',
           technologies: ['WordPress', 'Elementor'],
           image: require("@/assets/img/victoria.png"),
+          link: 'https://victoriasm.com.ar/',
           author: {
            name: 'SOULWARE',
             role: 'Marca Personal', 
@@ -380,6 +408,8 @@ export default {
           description: 'App para agenda médica y administración de turnos.',
           technologies: ['Vue.js', 'Node.js', 'MongoDB', 'Express'],
           image: '/api/placeholder/400/300',
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
             name: 'Fernando Alma',
             role: 'Full Stack Developer',
@@ -397,6 +427,8 @@ export default {
           description: 'Plataforma bancaria con pagos, transferencias y consultas.',
           technologies: ['Node.js', 'Express', 'MongoDB', 'JWT'],
           image: '/api/placeholder/400/300',
+          link: 'https://homebanking-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/homebanking-app',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
@@ -412,6 +444,8 @@ export default {
           description: 'Foro educativo con usuarios, categorías y gestión de temas.',
           technologies: ['Java', 'Spring Boot', 'MySQL', 'JWT'],
           image: '/api/placeholder/400/300',
+          link: 'https://forohub-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/forohub',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
@@ -427,6 +461,8 @@ export default {
           description: 'Aplicación web para explorar y organizar libros online.',
           technologies: ['Java', 'Spring Boot', 'PostgreSQL', 'REST'],
           image: '/api/placeholder/400/300',
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
@@ -442,6 +478,8 @@ export default {
           description: 'Conversor de divisas en tiempo real con tasas actualizadas.',
           technologies: ['Python', 'FastAPI', 'APIs Externas', 'Redis'],
           image: '/api/placeholder/400/300',
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
@@ -457,6 +495,8 @@ export default {
           description: 'App de IA para detección de uso de mascarillas.',
           technologies: ['Python', 'OpenCV', 'TensorFlow', 'Flask'],
           image: '/api/placeholder/400/300',
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
             name: 'Fernando Alma',
             role: 'Backend Developer',
@@ -474,6 +514,8 @@ export default {
           description: 'Plataforma online para organizar sorteos de amigo secreto.',
           technologies: ['HTML5', 'CSS3', 'JavaScript', 'LocalStorage'],
           image: require("@/assets/img/amigosecreto.png"),
+          link: 'https://amigosecreto-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/amigo-secreto',
           author: {
             name: 'Fernando Alma',
             role: 'Frontend Developer',
@@ -489,6 +531,8 @@ export default {
           description: 'Aplicación interactiva con información y filtros de Pokémon.',
           technologies: ['React', 'CSS3', 'PokeAPI', 'Axios'],
           image: require("@/assets/img/poke.png"),
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
               name: 'Fernando Alma',
             role: 'Frontend Developer',
@@ -504,6 +548,8 @@ export default {
           description: 'Videojuego de aventura y combate inspirado en AVATAR.',
           technologies: ['JavaScript', 'HTML5 Canvas', 'CSS3', 'GSAP'],
           image: require("@/assets/img/amigosecreto.png"),
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
               name: 'Fernando Alma',
             role: 'Game Developer',
@@ -519,6 +565,8 @@ export default {
           description: 'Réplica web interactiva del menú digital de McDonald\'s.',
           technologies: ['HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
           image: require("@/assets/img/mac.png"),
+          link: 'https://turnosmedicos-demo.vercel.app/',
+          github: 'https://github.com/fernando-alma/turnos-medicos',
           author: {
             name: 'Fernando Alma',
             role: 'Frontend Developer',
@@ -555,12 +603,14 @@ export default {
       this.activeFilter = filter;
     },
     viewProject(project) {
-      // Implementar lógica para ver proyecto
-      console.log('Ver proyecto:', project.title);
+      if (project.link) {
+        window.open(project.link, '_blank');
+      }
     },
     viewDetails(project) {
-      // Implementar lógica para ver detalles
-      console.log('Ver GitHub:', project.title);
+      if (project.github) {
+        window.open(project.github, '_blank');
+      }
     }
   }
 }
@@ -671,7 +721,7 @@ export default {
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  background: #3209c7;
+  background: #2754ff;
   
 }
 
@@ -736,7 +786,7 @@ export default {
 
 .action-btn.primary {
   background: white;
-  color: rgb(54, 7, 208);
+  color: #14095b;
   font-weight: 800;
 }
 
@@ -889,7 +939,7 @@ export default {
   margin-top: 1rem;
 }
 .read-more-btn {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: #14095b;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -967,6 +1017,7 @@ export default {
 @media (max-width: 768px) {
   .portfolio-catalog {
     padding: 1rem;
+    padding-top: 45px;
   }
   
   .catalog-title {

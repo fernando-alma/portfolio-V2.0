@@ -1,13 +1,14 @@
 <template>
   <nav class="navbar">
     <div class="navbar-brand">
-      <button class="hamburger" :class="{ 'is-active': isMenuOpen }" @click="toggleMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <!-- Logo -->
+      <img src="@/assets/icons/logoportfolio.png" alt="Logo" class="navbar-logo" />
     </div>
-
+    <button class="hamburger" :class="{ 'is-active': isMenuOpen }" @click="toggleMenu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <div class="navbar-menu" :class="{ 'is-open': isMenuOpen }">
       <ul class="nav-list">
         <li>
@@ -52,17 +53,63 @@ const closeMenu = () => {
 
 <style scoped>
 .navbar {
-  background: #3209c7e4;
+  background: #3209c7;
   color: #fff;
-  padding: 1.0rem;
+  padding: 0.1rem;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  height: 65px;
+  width: auto;
+  margin-left: 1rem; /* Espacio izquierdo en escritorio/tablet */
+  margin-right: 0;
+  transition: height 0.2s;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding-right: 1.5rem; /* Agrega espacio al borde derecho */
+  }
+  .navbar-logo {
+    height: 60px;
+    margin-left: 1rem;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+   .navbar {
+    padding-right: 1.5rem; /* Agrega espacio al borde derecho */
+  }
+  .navbar-logo {
+    height: 60px;
+    margin-left: 0;
+    margin-right: 1rem; /* Espacio derecho en móvil */
+  }
+}
+
+@media (max-width: 480px) {
+   .navbar {
+    padding-right: 1.5rem; /* Agrega espacio al borde derecho */
+  }
+  .navbar-logo {
+    height: 60px;
+    margin-left: 0;
+    margin-right: 2rem; /* Espacio derecho en móvil */
+  }
 }
 
 .navbar-menu {
@@ -96,7 +143,19 @@ const closeMenu = () => {
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+  .navbar-logo {
+    margin-right: 0;
+    margin-left: 1rem;
+  }
+  .navbar-brand {
+    order: 2;
+  }
   .hamburger {
+    order: 1;
     display: block;
     background: none;
     border: none;

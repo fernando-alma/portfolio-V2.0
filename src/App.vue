@@ -3,7 +3,7 @@
   <div id="app">
     <router-view />
     <footer>
-      <p>©2025 Fernando Alma - Desarrollo Web - Soulware Argentina </p>
+      <p>® Fernando Alma | Desarrollo Web FullStack | 2025</p>
     </footer>
   </div>
 </template>
@@ -32,7 +32,7 @@ body {
 }
 
 footer {
-  background-color: #3209c7;
+  background-color: #2754ff;
   color: black;
   display: flex;
   flex-direction: column;

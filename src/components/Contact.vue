@@ -16,12 +16,7 @@
             ¿Listo para dar vida a tus ideas? Hablemos sobre cómo podemos trabajar juntos para crear algo increíble. Siempre estoy abierto a nuevas oportunidades y proyectos interesantes.
           </p>
           <ul class="contact-links">
-            <li>
-              <a :href="'mailto:' + myEmail">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>{{ myEmail }}</span>
-              </a>
-            </li>
+          
             <li>
               <a :href="myLinkedIn" target="_blank" rel="noopener noreferrer">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
@@ -74,10 +69,8 @@ export default {
   name: "ContactSection",
   data() {
     return {
-      // Reemplaza con tus datos reales
-      myEmail: "fernando.g.dileo@email.com",
-      myLinkedIn: "https://www.linkedin.com/in/fernando-dileo/",
-      myGitHub: "https://github.com/tu-usuario",
+      myLinkedIn: "https://www.linkedin.com/in/fernando-alma/",
+      myGitHub: "https://github.com/fernando-alma",
       
       isSubmitting: false,
       formData: {
@@ -98,7 +91,7 @@ export default {
       this.isSubmitting = true;
 
       try {
-        const response = await fetch('https://formspree.io/f/TU_ENDPOINT_DE_FORMSPREE', {
+        const response = await fetch('https://formspree.io/f/mdkwnyod', {
           method: 'POST',
           headers: {
             'Accept': 'application/json'
@@ -107,7 +100,7 @@ export default {
         });
 
         if (response.ok) {
-          this.showFeedback(false, '¡Mensaje Enviado!', 'Gracias por contactarme, Fernando. Te responderé a la brevedad.');
+          this.showFeedback(false, '¡Mensaje Enviado!', 'Gracias por contactarme. Te responderé a la brevedad.');
           // Limpiar formulario
           this.formData.name = '';
           this.formData.email = '';
@@ -169,7 +162,7 @@ export default {
 
 .main-title {
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   margin-bottom: 3rem;
   font-weight: 700;
 }
@@ -214,8 +207,20 @@ export default {
   transition: color 0.3s ease;
 }
 
+@media (max-width: 768px) {
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .contact-links a {
+    justify-content: center;
+  }
+}
+
 .contact-links a:hover {
-  color: #6c63ff;
+  color: #2754ff;
 }
 
 .contact-links svg {
@@ -338,15 +343,15 @@ button[type="submit"]:disabled {
 /* Estilos Responsivos */
 @media (max-width: 768px) {
   .contact-section-wrapper {
-    padding: 2rem 1rem;
+    padding: 1.5rem 0.1rem;
   }
   .content-wrapper {
     flex-direction: column;
     gap: 2rem;
   }
   .main-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
   }
 }
 </style>

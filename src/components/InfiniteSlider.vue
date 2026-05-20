@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import SliderComponent from "./SliderComponent.vue"; // Asegúrate de que la ruta sea correcta
+import SliderComponent from "./SliderComponent.vue"; 
 
 export default {
   name: "InfiniteSlidersSection",
@@ -35,7 +35,7 @@ export default {
         {
           id: 1,
           name: "Casita de Flor",
-          description: "Ecommerce para venta de baterías de autos y motos.",
+          description: "E-commerce de arreglos florales y regalos especiales para una tienda en USA.",
           link: "https://casitadeflor.com/",
           image: require("@/assets/img/casitadeflor.png"),
           category: "Ecommerce",
@@ -45,39 +45,39 @@ export default {
           id: 2,
           name: "Termet SA",
           description:
-            "Sistema interno de carga de propiedades inmobiliarias con integración API.",
-          link: "https://inmobiliariafranchi.com/",
+            "Web institucional de ingeniería en refrigeración y procesos.",
+          link: "https://termetsa.com.ar/",
           image: require("@/assets/img/termet.png"),
-          category: "Sistema Web",
-          technologies: ["Vue.js", "API", "JavaScript"],
+          category: "Web Institucional",
+          technologies: ["Wordpress", "Elementor"],
         },
         {
           id: 3,
           name: "XOXO Club",
-          description: "Sitio institucional de insumos para bodegas y enología.",
+          description: "Sitio para discoteca en México con sistema de menú digital.",
           link: "https://sitiouno.soulware.com.ar/",
           image: require("@/assets/img/xoxo.png"),
-          category: "Web Institucional",
-          technologies: ["Vue.js", "CSS", "HTML"],
+          category: "Entretenimiento",
+          technologies: ["Wordpress", "Elementor", "JetEngine"],
         },
         {
           id: 4,
           name: "Victoria Sports Management",
           description:
-            "Web corporativa para empresarios expertos en finanzas de México.",
+            "Web de sport management y representación deportiva.",
           link: "https://victoriasm.com.ar/",
           image: require("@/assets/img/victoria.png"),
           category: "Corporativa",
-          technologies: ["Vue.js", "CSS", "JavaScript"],
+          technologies: ["Wordpress", "Elementor"],
         },
         {
           id: 5,
           name: "Durox",
-          description: "Sitio para discoteca en México con sistema de menú digital.",
-          link: "https://sitiouno.soulware.com.ar/",
+          description: "Sitio institucional de insumos para bodegas y enología.",
+          link: "https://sitioseis.soulware.com.ar/",
           image: require("@/assets/img/durox.png"),
-          category: "Entretenimiento",
-          technologies: ["Vue.js", "HTML", "CSS"],
+          category: "Web Institucional",
+          technologies: ["Wordpress", "Elementor"],
         },
         {
           id: 6,
@@ -85,9 +85,9 @@ export default {
           description:
             "Servicios integrales para la industria del petróleo, gas y minería.",
           link: "https://servicioschivas.com.ar/",
-          image: require("@/assets/img/remax.png"),
-          category: "Industrial",
-          technologies: ["Vue.js", "API", "JavaScript"],
+          image: require("@/assets/img/chivas.png"),
+          category: "Web Institucional",
+          technologies: ["Wordpress", "Elementor"],
         },
       ],
       studyProjects: [
@@ -96,14 +96,14 @@ export default {
           name: "Portfolio Personal",
           description: "Portfolio desarrollado con Vue.js y animaciones CSS",
           link: "https://github.com/tuuser/portfolio",
-          image: "/img/portfolio.jpg",
+          image: require("@/assets/img/portfolio.png"),
           category: "Frontend",
           technologies: ["Vue.js", "CSS", "HTML"],
         },
         {
           id: 2,
-          name: "Weather App",
-          description: "Aplicación del clima con API de OpenWeather",
+          name: "App Gestión de Turnos Médicos",
+          description: "App para agenda médica y administración de turnos.",
           link: "https://github.com/tuuser/weather-app",
           image: "/img/weather.jpg",
           category: "Frontend",
@@ -111,9 +111,9 @@ export default {
         },
         {
           id: 3,
-          name: "Task Manager",
+          name: "Facemask Detection",
           description:
-            "Aplicación de gestión de tareas con Vue y Firebase",
+            "App de IA para detección de uso correcto de mascarillas.",
           link: "https://github.com/tuuser/task-manager",
           image: "/img/tasks.jpg",
           category: "Fullstack",
@@ -127,7 +127,7 @@ export default {
 
 <style scoped>
 .sliders-section {
-  background-color: #14095b;
+  background-color: #2754ff;
   position: relative;
   display: flex;
   justify-content: center;
@@ -180,8 +180,8 @@ export default {
 .portfolio-btn {
   display: inline-block;
   padding: 12px 24px;
-  background-color: #6c63ff;
-  color: #ffffff;
+  background-color: #14095b;
+  color: white;
   border-radius: 25px;
   text-decoration: none;
   font-weight: bold;
@@ -194,8 +194,49 @@ export default {
 }
 
 .portfolio-btn:hover {
-  background-color: #736deb;
+  background-color: white;
+  color: #14095b;
   transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(108, 99, 255, 0.3);
+  
+}
+
+@media (max-width: 768px) {
+  .sliders-section {
+    min-height: auto;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
+  }
+
+  .sliders-content-wrapper {
+    max-width: 100vw;
+    padding: 0 0.5rem;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-description {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .view-all-section {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .portfolio-btn {
+    min-width: 140px;
+    font-size: 1rem;
+    padding: 10px 16px;
+    margin-bottom: 1.5rem;
+  }
 }
 </style>

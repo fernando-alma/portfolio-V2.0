@@ -4,8 +4,9 @@
     <About />
     <Projects />
     <Education />
-    <Contact />
     <Technologies />
+    <Contact />
+   
   </div>
 </template>
 

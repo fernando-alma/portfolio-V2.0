@@ -194,7 +194,7 @@ export default {
 .download-btn {
   display: inline-block;
   padding: 12px 24px;
-  background-color: #6c63ff;
+  background-color: #2754ff;
   color: #ffffff;
   border-radius: 25px;
   text-decoration: none;
@@ -207,18 +207,18 @@ export default {
 
 .portfolio-btn {
   background-color: transparent;
-  border: 2px solid #6c63ff;
+  border: 2px solid #2754ff;
 }
 
 .download-btn:hover {
-  background-color: #534acb;
+  background-color: #2754ff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
 }
 
 .portfolio-btn:hover {
-  background-color: #6c63ff;
-  border-color: #6c63ff;
+  background-color: #2754ff;
+  border-color: white;
 }
 
 /* Iconos de redes sociales */
@@ -252,7 +252,7 @@ export default {
   .about-section {
     min-height: 100vh;
     padding: 15px;
-    margin-bottom: 30px;
+    padding-top: 45px;
   }
 
   /* CAMBIO A LAYOUT VERTICAL EN MOBILE */

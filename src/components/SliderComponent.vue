@@ -38,7 +38,7 @@
               <p class="project-description">{{ project.description }}</p>
               <p class="project-tech">{{ project.technologies.join(", ") }}</p>
               <a v-if="project.link" :href="project.link" target="_blank" class="project-link">
-                Ver sitio
+                Ver proyecto
               </a>
             </div>
           </div>
@@ -519,7 +519,7 @@ export default {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #14095b;
   color: white;
   padding: 4px 12px;
   border-radius: 20px;
@@ -566,7 +566,7 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #14095b;
   color: white;
   border-radius: 12px;
   text-decoration: none;
@@ -601,14 +601,14 @@ export default {
     0 8px 25px rgba(0, 0, 0, 0.15),
     0 4px 12px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(15px);
-  color: #4a5568;
+  color: #14095b;
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .nav-arrow:hover {
   background: rgba(255, 255, 255, 1);
   transform: translateY(-50%) scale(1.15);
-  color: #667eea;
+  color: #14095b;
   box-shadow:
     0 12px 35px rgba(102, 126, 234, 0.25),
     0 6px 15px rgba(0, 0, 0, 0.1);
@@ -639,19 +639,19 @@ export default {
   height: 14px;
   border-radius: 50%;
   border: none;
-  background: rgba(102, 126, 234, 0.3);
+  background: white;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dot.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #14095b;
   transform: scale(1.3);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .dot:hover {
-  background: rgba(102, 126, 234, 0.6);
+  background: #14095b;
   transform: scale(1.1);
 }
 

@@ -135,7 +135,7 @@ export default {
 .section-title {
   text-align: left;
   margin-top: 4rem;
-  font-size: clamp(1.4rem, 2.7vw, 1.8rem); /* Título adaptable */
+  font-size: clamp(2rem, 2.7vw, 2.3rem); /* Título adaptable */
   margin-bottom: 2rem;
   font-weight: bold;
   background: linear-gradient(90deg, #fff, #ccc);
@@ -169,7 +169,7 @@ export default {
 }
 
 .timeline-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #2754ff;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
