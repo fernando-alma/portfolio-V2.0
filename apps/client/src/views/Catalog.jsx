@@ -7,11 +7,10 @@ export default function Catalog() {
   const [activeFilter, setActiveFilter] = useState('all');
 
   const categories = [
-    { key: 'all', label: 'Todos', icon: '💼' },
-    { key: 'wordpress', label: 'WordPress', icon: '📝' },
-    { key: 'frontend', label: 'Frontend', icon: '💻' },
-    { key: 'backend', label: 'Backend', icon: '⚙️' },
-    { key: 'fullstack', label: 'Full Stack', icon: '🚀' }
+    { key: 'all', label: 'Todos', icon: '' },
+    { key: 'wordpress', label: 'WordPress', icon: '' },
+    { key: 'backend', label: 'Backend', icon: '' },
+    { key: 'fullstack', label: 'Full Stack', icon: '' }
   ];
 
   useEffect(() => {

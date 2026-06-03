@@ -1,0 +1,103 @@
+// Experience & Education (Timeline)
+.body-container {
+  background: $deep-blue;
+  padding: 6rem 2rem;
+  width: 100%;
+
+  .timeline-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    margin-top: 3rem;
+    background: linear-gradient(90deg, #ffffff, #b0b0b0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .timeline {
+    position: relative;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 2px solid rgba(255, 255, 255, 0.15);
+
+    .timeline-item {
+      margin-bottom: 2.5rem;
+      position: relative;
+
+      .timeline-dot {
+        position: absolute;
+        left: -31px;
+        top: 8px;
+        width: 20px;
+        height: 20px;
+        background: $text-light;
+        border-radius: 50%;
+        border: 4px solid $deep-blue;
+        box-shadow: 0 0 0 2px rgba($accent-blue, 0.5);
+        transition: $transition-smooth;
+      }
+
+      &:hover .timeline-dot {
+        background: $accent-blue;
+        transform: scale(1.1);
+      }
+
+      .timeline-content {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(5px);
+        transition: $transition-smooth;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba($accent-blue, 0.4);
+          transform: translateX(5px);
+        }
+      }
+
+      .role {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: $text-light;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .company-date {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 0.8rem;
+
+        .company, .date {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .date {
+          color: $accent-blue;
+          font-weight: 600;
+        }
+      }
+
+      .description {
+        font-size: 0.98rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.7;
+      }
+    }
+  }
+}

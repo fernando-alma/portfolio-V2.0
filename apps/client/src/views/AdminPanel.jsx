@@ -1,126 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// ─────────────────────────────────────────────────────────────
+// AdminPanel — Dashboard completo con CRUD de todos los datos
+// ─────────────────────────────────────────────────────────────
+
+// Helper: initial project form state
+const emptyProject = {
+  title: '', agency: '', category: 'wordpress', categoryLabel: 'WordPress',
+  description: '', longDescription: '', technologies: '',
+  image: '', gallery: '', youtubeUrl: '', githubUrl: '', webUrl: ''
+};
+const emptyExp = { role: '', company: '', description: '', startDate: '', endDate: '', order: '' };
+const emptyEdu = { role: '', company: '', date: '', type: 'EDUCATION', order: '' };
+
 export default function AdminPanel() {
   const token = localStorage.getItem('token') || '';
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('projects');
+  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState({ message: '', type: '' });
 
-  // Core data states
+  // Data
   const [projects, setProjects] = useState([]);
   const [profile, setProfile] = useState(null);
   const [experiences, setExperiences] = useState([]);
   const [education, setEducation] = useState([]);
 
-  // Loading and feedback states
-  const [loading, setLoading] = useState(false);
-  const [feedback, setFeedback] = useState({ message: '', type: '' });
-
-  // Modal States
-  const [projectModal, setProjectModal] = useState({ open: false, mode: 'create', data: null });
-  const [expModal, setExpModal] = useState({ open: false, mode: 'create', data: null });
-  const [eduModal, setEduModal] = useState({ open: false, mode: 'create', data: null });
-
-  // Form Fields
-  const [projectForm, setProjectForm] = useState({
-    title: '',
-    category: 'wordpress',
-    categoryLabel: 'WordPress',
-    agency: '',
-    description: '',
-    longDescription: '',
-    technologies: '',
-    image: '',
-    gallery: '',
-    youtubeUrl: '',
-    githubUrl: '',
-    webUrl: ''
-  });
-
+  // Profile form
   const [profileForm, setProfileForm] = useState({
-    profilePic: '',
-    jobTitle: '',
-    description: '',
-    cvUrl: '',
-    githubUrl: '',
-    linkedinUrl: '',
-    whatsappUrl: ''
+    profilePic: '', jobTitle: '', description: '',
+    cvUrl: '', githubUrl: '', linkedinUrl: '', whatsappUrl: ''
   });
 
-  const [expForm, setExpForm] = useState({
-    role: '',
-    company: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    order: 0
-  });
+  // Project modal
+  const [projModal, setProjModal] = useState({ open: false, mode: 'create', data: null });
+  const [projForm, setProjForm] = useState(emptyProject);
 
-  const [eduForm, setEduForm] = useState({
-    role: '',
-    company: '',
-    date: '',
-    type: 'EDUCATION',
-    order: 0
-  });
+  // Experience modal
+  const [expModal, setExpModal] = useState({ open: false, mode: 'create', data: null });
+  const [expForm, setExpForm] = useState(emptyExp);
 
-  // Verify token validity on mount - if expired/invalid redirect to login
+  // Education modal
+  const [eduModal, setEduModal] = useState({ open: false, mode: 'create', data: null });
+  const [eduForm, setEduForm] = useState(emptyEdu);
+
+  // ── Verify token on mount ──
   useEffect(() => {
     if (token) {
-      fetch('/api/profile', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      }).then((res) => {
-        if (res.status === 401) {
-          localStorage.removeItem('token');
-          navigate('/panel-admin/login');
-        }
-      }).catch(() => {});
+      fetch('/api/profile', { headers: { Authorization: `Bearer ${token}` } })
+        .then(res => { if (res.status === 401) { localStorage.removeItem('token'); navigate('/panel-admin/login'); } })
+        .catch(() => {});
     }
   }, []);
 
-  // Load active tab data
+  // ── Load tab data ──
   useEffect(() => {
     if (!token) return;
     setLoading(true);
     setFeedback({ message: '', type: '' });
-
-    let fetchPromise = Promise.resolve();
+    let p = Promise.resolve();
 
     if (activeTab === 'projects') {
-      fetchPromise = fetch('/api/projects')
-        .then((res) => res.json())
-        .then((data) => setProjects(data));
+      p = fetch('/api/projects').then(r => r.json()).then(setProjects);
     } else if (activeTab === 'profile') {
-      fetchPromise = fetch('/api/profile')
-        .then((res) => res.json())
-        .then((data) => {
-          setProfile(data);
-          if (data) {
-            setProfileForm({
-              profilePic: data.profilePic || '',
-              jobTitle: data.jobTitle || '',
-              description: data.description || '',
-              cvUrl: data.cvUrl || '',
-              githubUrl: data.githubUrl || '',
-              linkedinUrl: data.linkedinUrl || '',
-              whatsappUrl: data.whatsappUrl || ''
-            });
-          }
+      p = fetch('/api/profile').then(r => r.json()).then(data => {
+        setProfile(data);
+        if (data) setProfileForm({
+          profilePic: data.profilePic || '', jobTitle: data.jobTitle || '',
+          description: data.description || '', cvUrl: data.cvUrl || '',
+          githubUrl: data.githubUrl || '', linkedinUrl: data.linkedinUrl || '',
+          whatsappUrl: data.whatsappUrl || ''
         });
+      });
     } else if (activeTab === 'experience') {
-      fetchPromise = fetch('/api/experience')
-        .then((res) => res.json())
-        .then((data) => setExperiences(data.sort((a, b) => (a.order || 0) - (b.order || 0))));
+      p = fetch('/api/experience').then(r => r.json()).then(d => setExperiences(d.sort((a, b) => (a.order||0)-(b.order||0))));
     } else if (activeTab === 'education') {
-      fetchPromise = fetch('/api/education')
-        .then((res) => res.json())
-        .then((data) => setEducation(data.sort((a, b) => (a.order || 0) - (b.order || 0))));
+      p = fetch('/api/education').then(r => r.json()).then(d => setEducation(d.sort((a, b) => (a.order||0)-(b.order||0))));
     }
 
-    fetchPromise
-      .catch((err) => showFeedback('Error al cargar datos: ' + err.message, 'error'))
-      .finally(() => setLoading(false));
+    p.catch(err => showFeedback('Error al cargar: ' + err.message, 'error'))
+     .finally(() => setLoading(false));
   }, [token, activeTab]);
 
   const showFeedback = (message, type = 'success') => {
@@ -128,775 +89,673 @@ export default function AdminPanel() {
     setTimeout(() => setFeedback({ message: '', type: '' }), 5000);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/panel-admin/login');
+  const handleLogout = () => { localStorage.removeItem('token'); navigate('/panel-admin/login'); };
+
+  // ── File upload helper ──
+  const uploadFile = async (file) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error al subir archivo');
+    return data.url;
   };
 
-
-  // Helper for file uploads
-  const handleFileUpload = async (e, onUploadSuccess) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      showFeedback('Subiendo archivo...', 'info');
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Error al subir archivo');
-      onUploadSuccess(data.url);
-      showFeedback('Archivo subido con éxito');
-    } catch (err) {
-      showFeedback('Error de subida: ' + err.message, 'error');
-    }
-  };
-
-  // Profile Submit
+  // ── Profile ──
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await fetch('/api/profile', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(profileForm)
       });
       if (!res.ok) throw new Error('Error al actualizar perfil');
-      showFeedback('Perfil actualizado con éxito');
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      showFeedback('Perfil actualizado con éxito ✓');
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
-  // Project Submit
-  const handleProjectSubmit = async (e) => {
+  // ── Projects ──
+  const openProjModal = (mode, data = null) => {
+    setProjModal({ open: true, mode, data });
+    setProjForm(mode === 'edit' && data ? {
+      title: data.title, agency: data.agency || '',
+      category: data.category, categoryLabel: data.categoryLabel,
+      description: data.description, longDescription: data.longDescription || '',
+      technologies: data.technologies ? data.technologies.join(', ') : '',
+      image: data.image, gallery: data.gallery ? data.gallery.join(', ') : '',
+      youtubeUrl: data.youtubeUrl || '', githubUrl: data.githubUrl || '', webUrl: data.webUrl || ''
+    } : emptyProject);
+  };
+
+  const handleProjSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      ...projectForm,
-      technologies: projectForm.technologies.split(',').map((t) => t.trim()).filter(Boolean),
-      gallery: projectForm.gallery ? projectForm.gallery.split(',').map((g) => g.trim()).filter(Boolean) : []
+      ...projForm,
+      technologies: projForm.technologies.split(',').map(t => t.trim()).filter(Boolean),
+      gallery: projForm.gallery ? projForm.gallery.split(',').map(g => g.trim()).filter(Boolean) : []
     };
-
-    const url = projectModal.mode === 'create' ? '/api/projects' : `/api/projects/${projectModal.data.id}`;
-    const method = projectModal.mode === 'create' ? 'POST' : 'PUT';
-
+    const url = projModal.mode === 'create' ? '/api/projects' : `/api/projects/${projModal.data.id}`;
+    const method = projModal.mode === 'create' ? 'POST' : 'PUT';
     try {
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload)
       });
       if (!res.ok) throw new Error('Error al guardar proyecto');
-      showFeedback('Proyecto guardado con éxito');
-      setProjectModal({ open: false, mode: 'create', data: null });
-      setActiveTab('');
-      setTimeout(() => setActiveTab('projects'), 50);
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      showFeedback(`Proyecto ${projModal.mode === 'create' ? 'creado' : 'actualizado'} con éxito ✓`);
+      setProjModal({ open: false, mode: 'create', data: null });
+      setActiveTab(''); setTimeout(() => setActiveTab('projects'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
   const deleteProject = async (id) => {
-    if (!window.confirm('¿Seguro que quieres eliminar este proyecto?')) return;
+    if (!confirm('¿Eliminar este proyecto?')) return;
     try {
-      const res = await fetch(`/api/projects/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Error al eliminar proyecto');
+      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error('Error al eliminar');
       showFeedback('Proyecto eliminado');
-      setActiveTab('');
-      setTimeout(() => setActiveTab('projects'), 50);
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      setActiveTab(''); setTimeout(() => setActiveTab('projects'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
-  // Experience Submit
+  // ── Experience ──
+  const openExpModal = (mode, data = null) => {
+    setExpModal({ open: true, mode, data });
+    setExpForm(mode === 'edit' && data ? {
+      role: data.role, company: data.company, description: data.description,
+      startDate: data.startDate, endDate: data.endDate || '', order: data.order || ''
+    } : emptyExp);
+  };
+
   const handleExpSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...expForm,
-      order: Number(expForm.order)
-    };
-
     const url = expModal.mode === 'create' ? '/api/experience' : `/api/experience/${expModal.data.id}`;
     const method = expModal.mode === 'create' ? 'POST' : 'PUT';
-
     try {
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ ...expForm, order: Number(expForm.order) })
       });
       if (!res.ok) throw new Error('Error al guardar experiencia');
-      showFeedback('Experiencia guardada con éxito');
+      showFeedback(`Experiencia ${expModal.mode === 'create' ? 'creada' : 'actualizada'} ✓`);
       setExpModal({ open: false, mode: 'create', data: null });
-      setActiveTab('');
-      setTimeout(() => setActiveTab('experience'), 50);
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      setActiveTab(''); setTimeout(() => setActiveTab('experience'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
   const deleteExp = async (id) => {
-    if (!window.confirm('¿Seguro que quieres eliminar esta experiencia?')) return;
+    if (!confirm('¿Eliminar esta experiencia?')) return;
     try {
-      const res = await fetch(`/api/experience/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Error al eliminar');
+      await fetch(`/api/experience/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       showFeedback('Experiencia eliminada');
-      setActiveTab('');
-      setTimeout(() => setActiveTab('experience'), 50);
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      setActiveTab(''); setTimeout(() => setActiveTab('experience'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
-  // Education Submit
+  // ── Education ──
+  const openEduModal = (mode, data = null) => {
+    setEduModal({ open: true, mode, data });
+    setEduForm(mode === 'edit' && data ? {
+      role: data.role, company: data.company, date: data.date, type: data.type, order: data.order || ''
+    } : emptyEdu);
+  };
+
   const handleEduSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...eduForm,
-      order: Number(eduForm.order)
-    };
-
     const url = eduModal.mode === 'create' ? '/api/education' : `/api/education/${eduModal.data.id}`;
     const method = eduModal.mode === 'create' ? 'POST' : 'PUT';
-
     try {
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ ...eduForm, order: Number(eduForm.order) })
       });
-      if (!res.ok) throw new Error('Error al guardar educación');
-      showFeedback('Educación/Certificación guardada');
+      if (!res.ok) throw new Error('Error al guardar');
+      showFeedback(`Registro ${eduModal.mode === 'create' ? 'creado' : 'actualizado'} ✓`);
       setEduModal({ open: false, mode: 'create', data: null });
-      setActiveTab('');
-      setTimeout(() => setActiveTab('education'), 50);
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      setActiveTab(''); setTimeout(() => setActiveTab('education'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
   const deleteEdu = async (id) => {
-    if (!window.confirm('¿Seguro que quieres eliminar este registro?')) return;
+    if (!confirm('¿Eliminar este registro?')) return;
     try {
-      const res = await fetch(`/api/education/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Error al eliminar');
-      showFeedback('Educación eliminada');
-      setActiveTab('');
-      setTimeout(() => setActiveTab('education'), 50);
-    } catch (err) {
-      showFeedback(err.message, 'error');
-    }
+      await fetch(`/api/education/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      showFeedback('Registro eliminado');
+      setActiveTab(''); setTimeout(() => setActiveTab('education'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
   };
 
-
+  // ─────────────────────────────────────────────────────────────
+  // RENDER
+  // ─────────────────────────────────────────────────────────────
   return (
+    <div className="admin-dashboard">
 
-    <div className="admin-container">
-      {/* Header */}
-      <div className="admin-header">
-        <h2>Panel de Control FullStack</h2>
-        <div className="header-actions">
-          <button onClick={handleLogout} className="logout-btn">
-            <i className="fas fa-sign-out-alt"></i> Salir
-          </button>
-        </div>
+      {/* Top Bar */}
+      <div className="admin-topbar">
+        <h2><i className="fas fa-layer-group" style={{ marginRight: '0.6rem', color: '#2754ff' }}></i>Panel de Control</h2>
+        <button className="logout-btn" onClick={handleLogout}>
+          <i className="fas fa-sign-out-alt"></i> Salir
+        </button>
       </div>
 
-      {/* Feedback banner */}
+      {/* Tab Navigation */}
+      <div className="admin-nav-tabs">
+        {[
+          { key: 'projects',   icon: 'fa-folder-open', label: 'Proyectos' },
+          { key: 'experience', icon: 'fa-briefcase',    label: 'Experiencia' },
+          { key: 'education',  icon: 'fa-graduation-cap', label: 'Educación' },
+          { key: 'profile',    icon: 'fa-user-circle',  label: 'Sobre Mí' },
+        ].map(t => (
+          <button
+            key={t.key}
+            className={`nav-tab-btn ${activeTab === t.key ? 'active' : ''}`}
+            onClick={() => setActiveTab(t.key)}
+          >
+            <i className={`fas ${t.icon}`}></i>{t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Feedback */}
       {feedback.message && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '2rem',
-          borderRadius: '8px',
-          background: feedback.type === 'error' ? 'rgba(229, 62, 62, 0.2)' : 'rgba(72, 187, 120, 0.2)',
-          border: feedback.type === 'error' ? '1px solid #e53e3e' : '1px solid #48bb78',
-          color: feedback.type === 'error' ? '#e53e3e' : '#48bb78',
-          fontWeight: 600
-        }}>
+        <div className={`feedback-banner ${feedback.type}`}>
+          <i className={`fas ${feedback.type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}`}></i>
           {feedback.message}
         </div>
       )}
 
-      {/* Tab Selectors */}
-      <div className="admin-tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
-          onClick={() => setActiveTab('projects')}
-        >
-          Proyectos
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'experience' ? 'active' : ''}`}
-          onClick={() => setActiveTab('experience')}
-        >
-          Experiencia
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'education' ? 'active' : ''}`}
-          onClick={() => setActiveTab('education')}
-        >
-          Educación
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => setActiveTab('profile')}
-        >
-          Sobre Mí
-        </button>
-      </div>
+      {loading && (
+        <div className="tab-pane" style={{ color: 'rgba(255,255,255,0.5)', textAlign: 'center', padding: '4rem' }}>
+          <i className="fas fa-spinner fa-spin" style={{ fontSize: '1.5rem' }}></i>
+          <p style={{ marginTop: '1rem' }}>Cargando...</p>
+        </div>
+      )}
 
-      {/* Active Tab Panel */}
-      <div className="tab-content">
-        {loading && <p>Cargando datos...</p>}
+      {/* ═══════════════════════════════════════
+          TAB: PROYECTOS
+      ═══════════════════════════════════════ */}
+      {!loading && activeTab === 'projects' && (
+        <div className="tab-pane">
+          <div className="pane-header">
+            <h3>Gestión de Proyectos</h3>
+            <button className="add-btn" onClick={() => openProjModal('create')}>
+              <i className="fas fa-plus"></i> Nuevo Proyecto
+            </button>
+          </div>
 
-        {/* ----------------- PROJECTS TAB ----------------- */}
-        {!loading && activeTab === 'projects' && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3>Gestión de Proyectos</h3>
-              <button className="tab-btn active" onClick={() => openProjectModal('create')}>
-                + Nuevo Proyecto
-              </button>
-            </div>
-
-            <table className="admin-table">
+          <div className="data-table-wrapper">
+            <table className="data-table">
               <thead>
                 <tr>
-                  <th>Miniatura</th>
+                  <th className="hide-mobile">Imagen</th>
                   <th>Título</th>
-                  <th>Categoría</th>
-                  <th>Agencia</th>
+                  <th className="hide-mobile">Categoría</th>
+                  <th className="hide-mobile">Agencia</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {projects.map((proj) => (
-                  <tr key={proj.id}>
-                    <td>
-                      <img src={proj.image} alt={proj.title} style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
+                {projects.map(p => (
+                  <tr key={p.id}>
+                    <td className="hide-mobile">
+                      <img className="thumb-img" src={p.image} alt={p.title} />
                     </td>
-                    <td><strong>{proj.title}</strong></td>
-                    <td>{proj.categoryLabel}</td>
-                    <td>{proj.agency || 'N/A'}</td>
-                    <td className="actions-cell">
-                      <button className="btn-edit" onClick={() => openProjectModal('edit', proj)}>
-                        Editar
-                      </button>
-                      <button className="btn-delete" onClick={() => deleteProject(proj.id)}>
-                        Eliminar
-                      </button>
+                    <td><strong>{p.title}</strong></td>
+                    <td className="hide-mobile"><span className="cat-badge">{p.categoryLabel}</span></td>
+                    <td className="hide-mobile">{p.agency || '—'}</td>
+                    <td>
+                      <div className="table-actions">
+                        <button className="btn-icon edit" title="Editar" onClick={() => openProjModal('edit', p)}>
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button className="btn-icon delete" title="Eliminar" onClick={() => deleteProject(p.id)}>
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
+                {projects.length === 0 && (
+                  <tr><td colSpan="5" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin proyectos aún</td></tr>
+                )}
               </tbody>
             </table>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ----------------- PROFILE TAB ----------------- */}
-        {!loading && activeTab === 'profile' && (
-          <div>
-            <h3>Datos Personales (Sobre Mí)</h3>
-            <form className="admin-form" onSubmit={handleProfileSubmit}>
-              
-              <div className="form-group">
-                <label>Foto de Perfil</label>
-                <input 
-                  type="text" 
-                  value={profileForm.profilePic} 
-                  onChange={(e) => setProfileForm({ ...profileForm, profilePic: e.target.value })} 
-                  placeholder="/uploads/..."
-                />
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={(e) => handleFileUpload(e, (url) => setProfileForm({ ...profileForm, profilePic: url }))} 
-                  style={{ marginTop: '0.5rem' }}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Archivo CV (PDF)</label>
-                <input 
-                  type="text" 
-                  value={profileForm.cvUrl} 
-                  onChange={(e) => setProfileForm({ ...profileForm, cvUrl: e.target.value })} 
-                  placeholder="/uploads/..."
-                />
-                <input 
-                  type="file" 
-                  accept=".pdf" 
-                  onChange={(e) => handleFileUpload(e, (url) => setProfileForm({ ...profileForm, cvUrl: url }))} 
-                  style={{ marginTop: '0.5rem' }}
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label>Título Profesional</label>
-                <input 
-                  type="text" 
-                  value={profileForm.jobTitle} 
-                  onChange={(e) => setProfileForm({ ...profileForm, jobTitle: e.target.value })} 
-                  required 
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label>Descripción Biográfica</label>
-                <textarea 
-                  rows={8}
-                  value={profileForm.description} 
-                  onChange={(e) => setProfileForm({ ...profileForm, description: e.target.value })} 
-                  required 
-                ></textarea>
-              </div>
-
-              <div className="form-group">
-                <label>GitHub URL</label>
-                <input 
-                  type="url" 
-                  value={profileForm.githubUrl} 
-                  onChange={(e) => setProfileForm({ ...profileForm, githubUrl: e.target.value })} 
-                />
-              </div>
-              <div className="form-group">
-                <label>LinkedIn URL</label>
-                <input 
-                  type="url" 
-                  value={profileForm.linkedinUrl} 
-                  onChange={(e) => setProfileForm({ ...profileForm, linkedinUrl: e.target.value })} 
-                />
-              </div>
-              <div className="form-group full-width">
-                <label>WhatsApp URL</label>
-                <input 
-                  type="url" 
-                  value={profileForm.whatsappUrl} 
-                  onChange={(e) => setProfileForm({ ...profileForm, whatsappUrl: e.target.value })} 
-                />
-              </div>
-
-              <div className="form-actions">
-                <button type="submit" className="btn-submit">Guardar Cambios</button>
-              </div>
-            </form>
+      {/* ═══════════════════════════════════════
+          TAB: EXPERIENCIA
+      ═══════════════════════════════════════ */}
+      {!loading && activeTab === 'experience' && (
+        <div className="tab-pane">
+          <div className="pane-header">
+            <h3>Experiencia Laboral</h3>
+            <button className="add-btn" onClick={() => openExpModal('create')}>
+              <i className="fas fa-plus"></i> Añadir
+            </button>
           </div>
-        )}
 
-        {/* ----------------- EXPERIENCE TAB ----------------- */}
-        {!loading && activeTab === 'experience' && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3>Experiencia Laboral</h3>
-              <button className="tab-btn active" onClick={() => openExpModal('create')}>
-                + Añadir Experiencia
-              </button>
-            </div>
-
-            <table className="admin-table">
+          <div className="data-table-wrapper">
+            <table className="data-table">
               <thead>
                 <tr>
-                  <th>Rol</th>
-                  <th>Empresa</th>
-                  <th>Fechas</th>
-                  <th>Orden</th>
+                  <th>Rol / Puesto</th>
+                  <th className="hide-mobile">Empresa</th>
+                  <th className="hide-mobile">Período</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {experiences.map((exp) => (
+                {experiences.map(exp => (
                   <tr key={exp.id}>
                     <td><strong>{exp.role}</strong></td>
-                    <td>{exp.company}</td>
-                    <td>{exp.startDate} - {exp.endDate || 'Presente'}</td>
-                    <td>{exp.order}</td>
-                    <td className="actions-cell">
-                      <button className="btn-edit" onClick={() => openExpModal('edit', exp)}>
-                        Editar
-                      </button>
-                      <button className="btn-delete" onClick={() => deleteExp(exp.id)}>
-                        Eliminar
-                      </button>
+                    <td className="hide-mobile">{exp.company}</td>
+                    <td className="hide-mobile">{exp.startDate} — {exp.endDate || 'Presente'}</td>
+                    <td>
+                      <div className="table-actions">
+                        <button className="btn-icon edit" onClick={() => openExpModal('edit', exp)}><i className="fas fa-edit"></i></button>
+                        <button className="btn-icon delete" onClick={() => deleteExp(exp.id)}><i className="fas fa-trash"></i></button>
+                      </div>
                     </td>
                   </tr>
                 ))}
+                {experiences.length === 0 && (
+                  <tr><td colSpan="4" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin registros</td></tr>
+                )}
               </tbody>
             </table>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ----------------- EDUCATION TAB ----------------- */}
-        {!loading && activeTab === 'education' && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3>Educación y Certificaciones</h3>
-              <button className="tab-btn active" onClick={() => openEduModal('create')}>
-                + Añadir Registro
-              </button>
-            </div>
+      {/* ═══════════════════════════════════════
+          TAB: EDUCACIÓN
+      ═══════════════════════════════════════ */}
+      {!loading && activeTab === 'education' && (
+        <div className="tab-pane">
+          <div className="pane-header">
+            <h3>Educación y Certificaciones</h3>
+            <button className="add-btn" onClick={() => openEduModal('create')}>
+              <i className="fas fa-plus"></i> Añadir
+            </button>
+          </div>
 
-            <table className="admin-table">
+          <div className="data-table-wrapper">
+            <table className="data-table">
               <thead>
                 <tr>
                   <th>Título / Rol</th>
-                  <th>Institución</th>
-                  <th>Período</th>
-                  <th>Tipo</th>
+                  <th className="hide-mobile">Institución</th>
+                  <th className="hide-mobile">Tipo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {education.map((item) => (
+                {education.map(item => (
                   <tr key={item.id}>
                     <td><strong>{item.role}</strong></td>
-                    <td>{item.company}</td>
-                    <td>{item.date}</td>
-                    <td>{item.type === 'EDUCATION' ? 'Educación' : 'Certificación'}</td>
-                    <td className="actions-cell">
-                      <button className="btn-edit" onClick={() => openEduModal('edit', item)}>
-                        Editar
-                      </button>
-                      <button className="btn-delete" onClick={() => deleteEdu(item.id)}>
-                        Eliminar
-                      </button>
+                    <td className="hide-mobile">{item.company}</td>
+                    <td className="hide-mobile">
+                      <span className="cat-badge" style={{ background: item.type === 'EDUCATION' ? 'rgba(72,187,120,0.14)' : 'rgba(245,101,101,0.14)', color: item.type === 'EDUCATION' ? '#68d391' : '#fc8181' }}>
+                        {item.type === 'EDUCATION' ? 'Educación' : 'Certificación'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="table-actions">
+                        <button className="btn-icon edit" onClick={() => openEduModal('edit', item)}><i className="fas fa-edit"></i></button>
+                        <button className="btn-icon delete" onClick={() => deleteEdu(item.id)}><i className="fas fa-trash"></i></button>
+                      </div>
                     </td>
                   </tr>
                 ))}
+                {education.length === 0 && (
+                  <tr><td colSpan="4" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin registros</td></tr>
+                )}
               </tbody>
             </table>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* ----------------------------------------------------
-          PROJECTS MODAL
-      ---------------------------------------------------- */}
-      {projectModal.open && (
-        <div className="modal-overlay" onClick={() => setProjectModal({ open: false, mode: 'create', data: null })}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '800px', textAlign: 'left' }}>
-            <h4 style={{ marginBottom: '1.5rem' }}>{projectModal.mode === 'create' ? 'Nuevo Proyecto' : 'Editar Proyecto'}</h4>
-            <form onSubmit={handleProjectSubmit} className="admin-form">
-              
-              <div className="form-group">
-                <label>Título</label>
-                <input 
-                  type="text" 
-                  value={projectForm.title} 
-                  onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })} 
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label>Agencia / Autor</label>
-                <input 
-                  type="text" 
-                  value={projectForm.agency} 
-                  onChange={(e) => setProjectForm({ ...projectForm, agency: e.target.value })} 
-                  placeholder="UNDER AGENCY, SOULWARE, etc."
-                />
-              </div>
+      {/* ═══════════════════════════════════════
+          TAB: SOBRE MÍ (PROFILE)
+      ═══════════════════════════════════════ */}
+      {!loading && activeTab === 'profile' && (
+        <div className="tab-pane">
+          <div className="admin-form-section">
+            <h3><i className="fas fa-user-circle" style={{ marginRight: '0.5rem', color: '#2754ff' }}></i>Datos Personales — Sobre Mí</h3>
 
-              <div className="form-group">
-                <label>Categoría Filtro (key)</label>
-                <select 
-                  value={projectForm.category} 
-                  onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
-                >
-                  <option value="wordpress">wordpress</option>
-                  <option value="frontend">frontend</option>
-                  <option value="backend">backend</option>
-                  <option value="fullstack">fullstack</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Etiqueta Categoría (Label)</label>
-                <input 
-                  type="text" 
-                  value={projectForm.categoryLabel} 
-                  onChange={(e) => setProjectForm({ ...projectForm, categoryLabel: e.target.value })} 
-                  placeholder="WordPress, Front End, etc."
-                  required 
-                />
-              </div>
+            <form onSubmit={handleProfileSubmit}>
+              <div className="admin-form-grid">
 
-              <div className="form-group full-width">
-                <label>Descripción Corta</label>
-                <input 
-                  type="text" 
-                  value={projectForm.description} 
-                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })} 
-                  required 
-                />
-              </div>
+                {/* Foto de perfil con preview */}
+                <div className="form-field">
+                  <label>Foto de Perfil</label>
+                  {profileForm.profilePic && (
+                    <img className="profile-preview-img" src={profileForm.profilePic} alt="Foto actual" />
+                  )}
+                  <input
+                    type="text"
+                    value={profileForm.profilePic}
+                    onChange={e => setProfileForm({ ...profileForm, profilePic: e.target.value })}
+                    placeholder="/uploads/foto_perfil.jpeg"
+                  />
+                  <input
+                    type="file" accept="image/*"
+                    onChange={async e => {
+                      try {
+                        showFeedback('Subiendo imagen...', 'info');
+                        const url = await uploadFile(e.target.files[0]);
+                        setProfileForm(f => ({ ...f, profilePic: url }));
+                        showFeedback('Imagen subida ✓');
+                      } catch (err) { showFeedback(err.message, 'error'); }
+                    }}
+                  />
+                  <span className="hint">Podés escribir la URL directamente o subir una imagen nueva</span>
+                </div>
 
-              <div className="form-group full-width">
-                <label>Descripción Larga (Detalles)</label>
-                <textarea 
-                  rows={4}
-                  value={projectForm.longDescription} 
-                  onChange={(e) => setProjectForm({ ...projectForm, longDescription: e.target.value })} 
-                ></textarea>
-              </div>
+                {/* CV */}
+                <div className="form-field">
+                  <label>Archivo CV (PDF)</label>
+                  {profileForm.cvUrl && (
+                    <a href={profileForm.cvUrl} target="_blank" rel="noreferrer" style={{ fontSize: '0.82rem', color: '#90cdf4', marginBottom: '0.5rem', display: 'block' }}>
+                      <i className="fas fa-file-pdf" style={{ marginRight: '0.3rem' }}></i>Ver CV actual
+                    </a>
+                  )}
+                  <input
+                    type="text"
+                    value={profileForm.cvUrl}
+                    onChange={e => setProfileForm({ ...profileForm, cvUrl: e.target.value })}
+                    placeholder="/uploads/cv.pdf"
+                  />
+                  <input
+                    type="file" accept=".pdf"
+                    onChange={async e => {
+                      try {
+                        showFeedback('Subiendo PDF...', 'info');
+                        const url = await uploadFile(e.target.files[0]);
+                        setProfileForm(f => ({ ...f, cvUrl: url }));
+                        showFeedback('CV subido ✓');
+                      } catch (err) { showFeedback(err.message, 'error'); }
+                    }}
+                  />
+                </div>
 
-              <div className="form-group full-width">
-                <label>Tecnologías (separadas por coma)</label>
-                <input 
-                  type="text" 
-                  value={projectForm.technologies} 
-                  onChange={(e) => setProjectForm({ ...projectForm, technologies: e.target.value })} 
-                  placeholder="React, Sass, Node.js"
-                  required 
-                />
-              </div>
+                {/* Título profesional */}
+                <div className="form-field">
+                  <label>Título Profesional</label>
+                  <input
+                    type="text"
+                    value={profileForm.jobTitle}
+                    onChange={e => setProfileForm({ ...profileForm, jobTitle: e.target.value })}
+                    placeholder="FullStack Developer"
+                    required
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Imagen Principal (Miniatura)</label>
-                <input 
-                  type="text" 
-                  value={projectForm.image} 
-                  onChange={(e) => setProjectForm({ ...projectForm, image: e.target.value })} 
-                  required 
-                />
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={(e) => handleFileUpload(e, (url) => setProjectForm({ ...projectForm, image: url }))} 
-                  style={{ marginTop: '0.5rem' }}
-                />
-              </div>
-              <div className="form-group">
-                <label>Galería (Urls separadas por coma)</label>
-                <input 
-                  type="text" 
-                  value={projectForm.gallery} 
-                  onChange={(e) => setProjectForm({ ...projectForm, gallery: e.target.value })} 
-                  placeholder="/uploads/captura1.png, /uploads/captura2.png"
-                />
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={(e) => handleFileUpload(e, (url) => {
-                    const current = projectForm.gallery ? projectForm.gallery.split(',').map(s=>s.trim()).filter(Boolean) : [];
-                    current.push(url);
-                    setProjectForm({ ...projectForm, gallery: current.join(', ') });
-                  })} 
-                  style={{ marginTop: '0.5rem' }}
-                />
-              </div>
+                {/* Descripción */}
+                <div className="form-field">
+                  <label>Descripción Biográfica</label>
+                  <textarea
+                    rows={8}
+                    value={profileForm.description}
+                    onChange={e => setProfileForm({ ...profileForm, description: e.target.value })}
+                    required
+                  ></textarea>
+                </div>
 
-              <div className="form-group">
-                <label>YouTube Video URL</label>
-                <input 
-                  type="url" 
-                  value={projectForm.youtubeUrl} 
-                  onChange={(e) => setProjectForm({ ...projectForm, youtubeUrl: e.target.value })} 
-                />
-              </div>
-              <div className="form-group">
-                <label>GitHub URL</label>
-                <input 
-                  type="url" 
-                  value={projectForm.githubUrl} 
-                  onChange={(e) => setProjectForm({ ...projectForm, githubUrl: e.target.value })} 
-                />
-              </div>
-              <div className="form-group full-width">
-                <label>Web Prod URL</label>
-                <input 
-                  type="url" 
-                  value={projectForm.webUrl} 
-                  onChange={(e) => setProjectForm({ ...projectForm, webUrl: e.target.value })} 
-                />
-              </div>
+                {/* Links sociales */}
+                <div className="form-field">
+                  <label>GitHub URL</label>
+                  <input type="url" value={profileForm.githubUrl} onChange={e => setProfileForm({ ...profileForm, githubUrl: e.target.value })} placeholder="https://github.com/..." />
+                </div>
+                <div className="form-field">
+                  <label>LinkedIn URL</label>
+                  <input type="url" value={profileForm.linkedinUrl} onChange={e => setProfileForm({ ...profileForm, linkedinUrl: e.target.value })} placeholder="https://linkedin.com/in/..." />
+                </div>
+                <div className="form-field">
+                  <label>WhatsApp URL</label>
+                  <input type="url" value={profileForm.whatsappUrl} onChange={e => setProfileForm({ ...profileForm, whatsappUrl: e.target.value })} placeholder="https://wa.me/..." />
+                </div>
 
-              <div className="form-actions">
-                <button type="button" className="btn-cancel" onClick={() => setProjectModal({ open: false, mode: 'create', data: null })}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn-submit">Guardar</button>
+                <div className="form-actions">
+                  <button type="submit" className="btn-save">
+                    <i className="fas fa-save" style={{ marginRight: '0.4rem' }}></i>Guardar Cambios
+                  </button>
+                </div>
               </div>
-
             </form>
           </div>
         </div>
       )}
 
-      {/* ----------------------------------------------------
-          EXPERIENCE MODAL
-      ---------------------------------------------------- */}
+      {/* ═══════════════════════════════════════
+          MODAL: PROYECTO (Crear / Editar)
+      ═══════════════════════════════════════ */}
+      {projModal.open && (
+        <div className="admin-modal-overlay" onClick={() => setProjModal({ open: false, mode: 'create', data: null })}>
+          <div className="admin-modal-box" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">
+              <i className={`fas ${projModal.mode === 'create' ? 'fa-plus-circle' : 'fa-edit'}`}></i>
+              {projModal.mode === 'create' ? 'Nuevo Proyecto' : 'Editar Proyecto'}
+            </div>
+
+            <form onSubmit={handleProjSubmit}>
+              <div className="admin-form-grid">
+
+                <div className="form-field">
+                  <label>Título *</label>
+                  <input type="text" value={projForm.title} onChange={e => setProjForm({ ...projForm, title: e.target.value })} required />
+                </div>
+
+                <div className="form-field">
+                  <label>Agencia / Autor</label>
+                  <input type="text" value={projForm.agency} onChange={e => setProjForm({ ...projForm, agency: e.target.value })} placeholder="UNDER AGENCY, SOULWARE..." />
+                </div>
+
+                <div className="form-row-2">
+                  <div className="form-field">
+                    <label>Categoría (key)</label>
+                    <select value={projForm.category} onChange={e => setProjForm({ ...projForm, category: e.target.value })}>
+                      <option value="wordpress">wordpress</option>
+                      <option value="frontend">frontend</option>
+                      <option value="backend">backend</option>
+                      <option value="fullstack">fullstack</option>
+                    </select>
+                  </div>
+                  <div className="form-field">
+                    <label>Etiqueta Categoría *</label>
+                    <input type="text" value={projForm.categoryLabel} onChange={e => setProjForm({ ...projForm, categoryLabel: e.target.value })} placeholder="WordPress, Front End..." required />
+                  </div>
+                </div>
+
+                <div className="form-field">
+                  <label>Descripción Corta *</label>
+                  <input type="text" value={projForm.description} onChange={e => setProjForm({ ...projForm, description: e.target.value })} required />
+                </div>
+
+                <div className="form-field">
+                  <label>Descripción Detallada</label>
+                  <textarea rows={4} value={projForm.longDescription} onChange={e => setProjForm({ ...projForm, longDescription: e.target.value })}></textarea>
+                </div>
+
+                <div className="form-field">
+                  <label>Tecnologías (separadas por coma) *</label>
+                  <input type="text" value={projForm.technologies} onChange={e => setProjForm({ ...projForm, technologies: e.target.value })} placeholder="React, Sass, Node.js" required />
+                </div>
+
+                <div className="form-field">
+                  <label>Imagen Principal (URL o subir) *</label>
+                  {projForm.image && <img src={projForm.image} alt="" style={{ width: '100px', height: '66px', objectFit: 'cover', borderRadius: '6px', marginBottom: '0.5rem' }} />}
+                  <input type="text" value={projForm.image} onChange={e => setProjForm({ ...projForm, image: e.target.value })} placeholder="/uploads/proyecto.png" required />
+                  <input type="file" accept="image/*" onChange={async e => {
+                    try {
+                      showFeedback('Subiendo...', 'info');
+                      const url = await uploadFile(e.target.files[0]);
+                      setProjForm(f => ({ ...f, image: url }));
+                      showFeedback('Imagen subida ✓');
+                    } catch (err) { showFeedback(err.message, 'error'); }
+                  }} />
+                </div>
+
+                <div className="form-field">
+                  <label>Galería (URLs separadas por coma)</label>
+                  <input type="text" value={projForm.gallery} onChange={e => setProjForm({ ...projForm, gallery: e.target.value })} placeholder="/uploads/cap1.png, /uploads/cap2.png" />
+                  <input type="file" accept="image/*" onChange={async e => {
+                    try {
+                      showFeedback('Subiendo...', 'info');
+                      const url = await uploadFile(e.target.files[0]);
+                      const current = projForm.gallery ? projForm.gallery.split(',').map(s => s.trim()).filter(Boolean) : [];
+                      current.push(url);
+                      setProjForm(f => ({ ...f, gallery: current.join(', ') }));
+                      showFeedback('Imagen agregada ✓');
+                    } catch (err) { showFeedback(err.message, 'error'); }
+                  }} />
+                </div>
+
+                <div className="form-field">
+                  <label>YouTube Video URL</label>
+                  <input type="url" value={projForm.youtubeUrl} onChange={e => setProjForm({ ...projForm, youtubeUrl: e.target.value })} placeholder="https://youtube.com/watch?v=..." />
+                </div>
+
+                <div className="form-field">
+                  <label>GitHub URL</label>
+                  <input type="url" value={projForm.githubUrl} onChange={e => setProjForm({ ...projForm, githubUrl: e.target.value })} />
+                </div>
+
+                <div className="form-field">
+                  <label>URL Sitio Web en Producción</label>
+                  <input type="url" value={projForm.webUrl} onChange={e => setProjForm({ ...projForm, webUrl: e.target.value })} placeholder="https://..." />
+                </div>
+
+                <div className="form-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setProjModal({ open: false, mode: 'create', data: null })}>Cancelar</button>
+                  <button type="submit" className="btn-save">
+                    <i className="fas fa-save" style={{ marginRight: '0.4rem' }}></i>
+                    {projModal.mode === 'create' ? 'Crear Proyecto' : 'Guardar Cambios'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════
+          MODAL: EXPERIENCIA (Crear / Editar)
+      ═══════════════════════════════════════ */}
       {expModal.open && (
-        <div className="modal-overlay" onClick={() => setExpModal({ open: false, mode: 'create', data: null })}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', textAlign: 'left' }}>
-            <h4 style={{ marginBottom: '1.5rem' }}>{expModal.mode === 'create' ? 'Añadir Experiencia' : 'Editar Experiencia'}</h4>
-            <form onSubmit={handleExpSubmit} className="admin-form">
-              
-              <div className="form-group full-width">
-                <label>Rol / Puesto</label>
-                <input 
-                  type="text" 
-                  value={expForm.role} 
-                  onChange={(e) => setExpForm({ ...expForm, role: e.target.value })} 
-                  required 
-                />
-              </div>
+        <div className="admin-modal-overlay" onClick={() => setExpModal({ open: false, mode: 'create', data: null })}>
+          <div className="admin-modal-box" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">
+              <i className={`fas ${expModal.mode === 'create' ? 'fa-plus-circle' : 'fa-edit'}`}></i>
+              {expModal.mode === 'create' ? 'Nueva Experiencia' : 'Editar Experiencia'}
+            </div>
 
-              <div className="form-group full-width">
-                <label>Empresa / Organización</label>
-                <input 
-                  type="text" 
-                  value={expForm.company} 
-                  onChange={(e) => setExpForm({ ...expForm, company: e.target.value })} 
-                  required 
-                />
-              </div>
+            <form onSubmit={handleExpSubmit}>
+              <div className="admin-form-grid">
 
-              <div className="form-group full-width">
-                <label>Descripción de Funciones</label>
-                <textarea 
-                  rows={4}
-                  value={expForm.description} 
-                  onChange={(e) => setExpForm({ ...expForm, description: e.target.value })} 
-                  required 
-                ></textarea>
-              </div>
+                <div className="form-field">
+                  <label>Rol / Puesto *</label>
+                  <input type="text" value={expForm.role} onChange={e => setExpForm({ ...expForm, role: e.target.value })} required />
+                </div>
 
-              <div className="form-group">
-                <label>Fecha Inicio</label>
-                <input 
-                  type="text" 
-                  placeholder="Octubre 2022"
-                  value={expForm.startDate} 
-                  onChange={(e) => setExpForm({ ...expForm, startDate: e.target.value })} 
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label>Fecha Fin (vacío = Presente)</label>
-                <input 
-                  type="text" 
-                  placeholder="Marzo 2025"
-                  value={expForm.endDate} 
-                  onChange={(e) => setExpForm({ ...expForm, endDate: e.target.value })} 
-                />
-              </div>
-              <div className="form-group full-width">
-                <label>Orden visual</label>
-                <input 
-                  type="number" 
-                  value={expForm.order} 
-                  onChange={(e) => setExpForm({ ...expForm, order: e.target.value })} 
-                  required 
-                />
-              </div>
+                <div className="form-field">
+                  <label>Empresa / Organización *</label>
+                  <input type="text" value={expForm.company} onChange={e => setExpForm({ ...expForm, company: e.target.value })} required />
+                </div>
 
-              <div className="form-actions">
-                <button type="button" className="btn-cancel" onClick={() => setExpModal({ open: false, mode: 'create', data: null })}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn-submit">Guardar</button>
-              </div>
+                <div className="form-field">
+                  <label>Descripción de Funciones *</label>
+                  <textarea rows={5} value={expForm.description} onChange={e => setExpForm({ ...expForm, description: e.target.value })} required></textarea>
+                </div>
 
+                <div className="form-row-2">
+                  <div className="form-field">
+                    <label>Fecha Inicio *</label>
+                    <input type="text" value={expForm.startDate} onChange={e => setExpForm({ ...expForm, startDate: e.target.value })} placeholder="Octubre 2022" required />
+                  </div>
+                  <div className="form-field">
+                    <label>Fecha Fin (vacío = Presente)</label>
+                    <input type="text" value={expForm.endDate} onChange={e => setExpForm({ ...expForm, endDate: e.target.value })} placeholder="Marzo 2025" />
+                  </div>
+                </div>
+
+                <div className="form-field">
+                  <label>Orden visual</label>
+                  <input type="number" value={expForm.order} onChange={e => setExpForm({ ...expForm, order: e.target.value })} placeholder="1" />
+                </div>
+
+                <div className="form-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setExpModal({ open: false, mode: 'create', data: null })}>Cancelar</button>
+                  <button type="submit" className="btn-save">
+                    <i className="fas fa-save" style={{ marginRight: '0.4rem' }}></i>
+                    {expModal.mode === 'create' ? 'Crear Experiencia' : 'Guardar Cambios'}
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* ----------------------------------------------------
-          EDUCATION/CERTIFICATION MODAL
-      ---------------------------------------------------- */}
+      {/* ═══════════════════════════════════════
+          MODAL: EDUCACIÓN (Crear / Editar)
+      ═══════════════════════════════════════ */}
       {eduModal.open && (
-        <div className="modal-overlay" onClick={() => setEduModal({ open: false, mode: 'create', data: null })}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', textAlign: 'left' }}>
-            <h4 style={{ marginBottom: '1.5rem' }}>{eduModal.mode === 'create' ? 'Añadir Registro' : 'Editar Registro'}</h4>
-            <form onSubmit={handleEduSubmit} className="admin-form">
-              
-              <div className="form-group full-width">
-                <label>Título / Rol</label>
-                <input 
-                  type="text" 
-                  value={eduForm.role} 
-                  onChange={(e) => setEduForm({ ...eduForm, role: e.target.value })} 
-                  required 
-                />
-              </div>
+        <div className="admin-modal-overlay" onClick={() => setEduModal({ open: false, mode: 'create', data: null })}>
+          <div className="admin-modal-box" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">
+              <i className={`fas ${eduModal.mode === 'create' ? 'fa-plus-circle' : 'fa-edit'}`}></i>
+              {eduModal.mode === 'create' ? 'Nuevo Registro' : 'Editar Registro'}
+            </div>
 
-              <div className="form-group full-width">
-                <label>Institución / Empresa</label>
-                <input 
-                  type="text" 
-                  value={eduForm.company} 
-                  onChange={(e) => setEduForm({ ...eduForm, company: e.target.value })} 
-                  required 
-                />
-              </div>
+            <form onSubmit={handleEduSubmit}>
+              <div className="admin-form-grid">
 
-              <div className="form-group">
-                <label>Período / Fecha</label>
-                <input 
-                  type="text" 
-                  placeholder="2024 - 2025"
-                  value={eduForm.date} 
-                  onChange={(e) => setEduForm({ ...eduForm, date: e.target.value })} 
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label>Tipo</label>
-                <select 
-                  value={eduForm.type} 
-                  onChange={(e) => setEduForm({ ...eduForm, type: e.target.value })}
-                >
-                  <option value="EDUCATION">Educación</option>
-                  <option value="CERTIFICATION">Certificación</option>
-                </select>
-              </div>
-              <div className="form-group full-width">
-                <label>Orden visual</label>
-                <input 
-                  type="number" 
-                  value={eduForm.order} 
-                  onChange={(e) => setEduForm({ ...eduForm, order: e.target.value })} 
-                  required 
-                />
-              </div>
+                <div className="form-field">
+                  <label>Título / Rol *</label>
+                  <input type="text" value={eduForm.role} onChange={e => setEduForm({ ...eduForm, role: e.target.value })} required />
+                </div>
 
-              <div className="form-actions">
-                <button type="button" className="btn-cancel" onClick={() => setEduModal({ open: false, mode: 'create', data: null })}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn-submit">Guardar</button>
-              </div>
+                <div className="form-field">
+                  <label>Institución / Empresa *</label>
+                  <input type="text" value={eduForm.company} onChange={e => setEduForm({ ...eduForm, company: e.target.value })} required />
+                </div>
 
+                <div className="form-row-2">
+                  <div className="form-field">
+                    <label>Período / Fecha *</label>
+                    <input type="text" value={eduForm.date} onChange={e => setEduForm({ ...eduForm, date: e.target.value })} placeholder="2024 – 2025" required />
+                  </div>
+                  <div className="form-field">
+                    <label>Tipo *</label>
+                    <select value={eduForm.type} onChange={e => setEduForm({ ...eduForm, type: e.target.value })}>
+                      <option value="EDUCATION">Educación</option>
+                      <option value="CERTIFICATION">Certificación</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-field">
+                  <label>Orden visual</label>
+                  <input type="number" value={eduForm.order} onChange={e => setEduForm({ ...eduForm, order: e.target.value })} placeholder="1" />
+                </div>
+
+                <div className="form-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setEduModal({ open: false, mode: 'create', data: null })}>Cancelar</button>
+                  <button type="submit" className="btn-save">
+                    <i className="fas fa-save" style={{ marginRight: '0.4rem' }}></i>
+                    {eduModal.mode === 'create' ? 'Crear Registro' : 'Guardar Cambios'}
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
         </div>

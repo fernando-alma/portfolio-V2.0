@@ -1,0 +1,75 @@
+// Technologies Section
+.technologies-section {
+  --item-width: 140px;
+  background-color: $text-light;
+  color: $deep-blue;
+  padding: 6rem 0;
+  width: 100%;
+
+  h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+  }
+
+  .slider-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 1.5rem 0;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  }
+
+  .slider-track {
+    display: flex;
+    width: calc(var(--item-width) * var(--item-count) * 2);
+    animation: scroll linear infinite;
+  }
+
+  #track2 {
+    animation-direction: reverse;
+  }
+
+  .slider-container:hover .slider-track {
+    animation-play-state: paused;
+  }
+
+  .tech-item {
+    width: var(--item-width);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+    transition: $transition-bounce;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+    }
+
+    p {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(var(--item-width) * var(--item-count) * -1));
+  }
+}
