@@ -71,5 +71,5 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Comando de inicio: levanta el servidor Express unificado
-CMD ["node", "apps/api/src/server.js"]
+# Comando de inicio: aplica migraciones y luego levanta el servidor Express unificado
+CMD ["sh", "-c", "pnpm --filter api exec prisma migrate deploy && node apps/api/src/server.js"]
