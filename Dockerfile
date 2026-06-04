@@ -13,24 +13,16 @@ FROM node:20-alpine AS frontend-builder
 
 WORKDIR /app
 
-# Instalar OpenSSL (Necesario para Prisma) y pnpm globalmente
 RUN apk update && apk add --no-cache openssl
 RUN npm install -g pnpm
 
-# Copiar archivos de configuración del monorepo
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-
-# Copiar manifests de cada workspace antes de instalar (mejor caché)
 COPY apps/client/package.json ./apps/client/
 COPY apps/api/package.json ./apps/api/
 
-# Instalar TODAS las dependencias del monorepo (necesario para el build del cliente)
 RUN pnpm install --frozen-lockfile
 
-# Copiar el código fuente del cliente
 COPY apps/client ./apps/client
-
-# Ejecutar el build de producción de React/Vite
 RUN pnpm --filter client build
 
 # ─────────────────────────────────────────────────────────────
@@ -40,38 +32,24 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Instalar OpenSSL (VITAL para Prisma en producción) y pnpm globalmente
 RUN apk update && apk add --no-cache openssl
 RUN npm install -g pnpm
 
-# Copiar archivos de configuración del monorepo
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-
-# Copiar el package.json del API (único workspace en producción)
 COPY apps/api/package.json ./apps/api/
 
-# Instalar SOLO las dependencias de producción de la API
 RUN pnpm install --frozen-lockfile --filter api
 
-# Copiar el código fuente de la API
 COPY apps/api ./apps/api
-
-# Copiar los archivos compilados del frontend desde la etapa anterior
-# El servidor Express los sirve como archivos estáticos desde /app/apps/client/dist
 COPY --from=frontend-builder /app/apps/client/dist ./apps/client/dist
 
-# NUEVO: Copiar las imágenes estáticas del cliente directamente a la carpeta de uploads de la API
-COPY --from=frontend-builder /app/apps/client/src/assets/img ./apps/api/uploads/
-
-# Generar el cliente de Prisma en producción
 RUN pnpm --filter api exec prisma generate
 
-# Exponer el puerto de la aplicación Express
+RUN mkdir -p ./apps/api/uploads
+
 EXPOSE 3000
 
-# Variables de entorno por defecto (sobreescribibles en EasyPanel)
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Comando de inicio: aplica migraciones y luego levanta el servidor Express unificado
 CMD ["sh", "-c", "pnpm --filter api exec prisma migrate deploy && node apps/api/src/server.js"]
