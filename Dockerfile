@@ -13,7 +13,8 @@ FROM node:20-alpine AS frontend-builder
 
 WORKDIR /app
 
-# Instalar pnpm globalmente
+# Instalar OpenSSL (Necesario para Prisma) y pnpm globalmente
+RUN apk update && apk add --no-cache openssl
 RUN npm install -g pnpm
 
 # Copiar archivos de configuración del monorepo
@@ -39,7 +40,8 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Instalar pnpm globalmente
+# Instalar OpenSSL (VITAL para Prisma en producción) y pnpm globalmente
+RUN apk update && apk add --no-cache openssl
 RUN npm install -g pnpm
 
 # Copiar archivos de configuración del monorepo
