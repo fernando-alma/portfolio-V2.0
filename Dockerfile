@@ -60,11 +60,11 @@ COPY apps/api ./apps/api
 # El servidor Express los sirve como archivos estáticos desde /app/apps/client/dist
 COPY --from=frontend-builder /app/apps/client/dist ./apps/client/dist
 
+# NUEVO: Copiar las imágenes estáticas del cliente directamente a la carpeta de uploads de la API
+COPY --from=frontend-builder /app/apps/client/src/assets/img ./apps/api/uploads/
+
 # Generar el cliente de Prisma en producción
 RUN pnpm --filter api exec prisma generate
-
-# Crear el directorio de uploads (para archivos subidos por el admin)
-RUN mkdir -p ./apps/api/uploads
 
 # Exponer el puerto de la aplicación Express
 EXPOSE 3000
