@@ -44,14 +44,18 @@ export default function Technologies() {
           {/* Original list */}
           {techRow1.map((tech) => (
             <div className="tech-item" key={tech.name}>
-              <img src={tech.logoUrl} alt={tech.name} />
+              <div className="logo-wrapper">
+                <img src={tech.logoUrl} alt={tech.name} />
+              </div>
               <p>{tech.name}</p>
             </div>
           ))}
           {/* Cloned list for infinite loop */}
           {techRow1.map((tech) => (
             <div className="tech-item" key={`${tech.name}-clone`} aria-hidden="true">
-              <img src={tech.logoUrl} alt={tech.name} />
+              <div className="logo-wrapper">
+                <img src={tech.logoUrl} alt={tech.name} />
+              </div>
               <p>{tech.name}</p>
             </div>
           ))}
@@ -71,14 +75,18 @@ export default function Technologies() {
           {/* Original list */}
           {techRow2.map((tech) => (
             <div className="tech-item" key={tech.name}>
-              <img src={tech.logoUrl} alt={tech.name} />
+              <div className="logo-wrapper">
+                <img src={tech.logoUrl} alt={tech.name} />
+              </div>
               <p>{tech.name}</p>
             </div>
           ))}
           {/* Cloned list for infinite loop */}
           {techRow2.map((tech) => (
             <div className="tech-item" key={`${tech.name}-clone`} aria-hidden="true">
-              <img src={tech.logoUrl} alt={tech.name} />
+              <div className="logo-wrapper">
+                <img src={tech.logoUrl} alt={tech.name} />
+              </div>
               <p>{tech.name}</p>
             </div>
           ))}

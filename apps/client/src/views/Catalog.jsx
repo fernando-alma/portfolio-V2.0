@@ -5,10 +5,12 @@ export default function Catalog() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const categories = [
     { key: 'all', label: 'Todos', icon: '' },
     { key: 'wordpress', label: 'WordPress', icon: '' },
+    { key: 'frontend', label: 'Frontend', icon: '' },
     { key: 'backend', label: 'Backend', icon: '' },
     { key: 'fullstack', label: 'Full Stack', icon: '' }
   ];
@@ -56,6 +58,14 @@ export default function Catalog() {
     ? projects
     : projects.filter((p) => (p.category || '').toLowerCase() === activeFilter);
 
+  // Pagination Loci
+  const projectsPerPage = 9;
+  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+  const displayedProjects = filteredProjects.slice(
+    (currentPage - 1) * projectsPerPage,
+    currentPage * projectsPerPage
+  );
+
   if (loading) {
     return (
       <div className="catalog-section" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -82,7 +92,10 @@ export default function Catalog() {
           return (
             <button
               key={cat.key}
-              onClick={() => setActiveFilter(cat.key)}
+              onClick={() => {
+                setActiveFilter(cat.key);
+                setCurrentPage(1);
+              }}
               className={`filter-btn ${activeFilter === cat.key ? 'active' : ''}`}
             >
               <span style={{ marginRight: '6px' }}>{cat.icon}</span>
@@ -100,66 +113,108 @@ export default function Catalog() {
           <p>Intenta seleccionar otra categoría</p>
         </div>
       ) : (
-        <div className="projects-grid">
-          {filteredProjects.map((project) => {
-            const author = getAuthorDetails(project.agency);
-            return (
-              <div className="project-card" key={project.id}>
-                {/* Image & overlay */}
-                <div className="image-wrapper">
-                  <img src={project.image} alt={project.title} className="project-image" />
-                  <span className="project-category">{project.categoryLabel || project.category}</span>
-                </div>
-
-                {/* Content */}
-                <div className="card-content">
-                  <div>
-                    {/* Header: Agency tags */}
-                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.8rem', flexWrap: 'wrap' }}>
-                      <span className="project-category" style={{ position: 'static', padding: '2px 8px', fontSize: '0.7rem' }}>
-                        {project.categoryLabel || project.category}
-                      </span>
-                      {project.agency && (
-                        <span className="project-category" style={{ position: 'static', padding: '2px 8px', fontSize: '0.7rem', background: '#2754ff' }}>
-                          {project.agency}
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="project-title">{project.title}</h3>
-                    <p className="project-description" style={{ minHeight: '60px' }}>{project.description}</p>
-
-                    {/* Technologies list */}
-                    <div className="project-tech" style={{ marginBottom: '1.5rem' }}>
-                      {Array.isArray(project.technologies) 
-                        ? project.technologies.join(', ') 
-                        : project.technologies}
-                    </div>
+        <>
+          <div className="projects-grid">
+            {displayedProjects.map((project) => {
+              const author = getAuthorDetails(project.agency);
+              return (
+                <div className="project-card" key={project.id}>
+                  {/* Image & overlay */}
+                  <div className="image-wrapper">
+                    <img src={project.image} alt={project.title} className="project-image" />
+                    <span className="project-category">{project.categoryLabel || project.category}</span>
                   </div>
 
-                  {/* Author Meta & Action button */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <img 
-                        src={author.avatar} 
-                        alt={author.name} 
-                        style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(0,0,0,0.1)' }} 
-                      />
-                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1a202c' }}>{author.name}</span>
-                        <span style={{ fontSize: '0.7rem', color: '#718096' }}>{author.role}</span>
+                  {/* Content */}
+                  <div className="card-content">
+                    <div>
+                      {/* Header: Agency tags */}
+                      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.8rem', flexWrap: 'wrap' }}>
+                        <span className="project-category" style={{ position: 'static', padding: '2px 8px', fontSize: '0.7rem' }}>
+                          {project.categoryLabel || project.category}
+                        </span>
+                        {project.agency && (
+                          <span className="project-category" style={{ position: 'static', padding: '2px 8px', fontSize: '0.7rem', background: '#2754ff' }}>
+                            {project.agency}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="project-title">{project.title}</h3>
+                      <p className="project-description" style={{ minHeight: '60px' }}>{project.description}</p>
+
+                      {/* Technologies list */}
+                      <div className="project-tech" style={{ marginBottom: '1.5rem' }}>
+                        {Array.isArray(project.technologies) 
+                          ? project.technologies.join(', ') 
+                          : project.technologies}
                       </div>
                     </div>
-                    
-                    <Link to={`/proyecto/${project.id}`} className="project-link-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-                      Ver Detalle
-                    </Link>
+
+                    {/* Author Meta & Action button */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '1rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <img 
+                          src={author.avatar} 
+                          alt={author.name} 
+                          style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(0,0,0,0.1)' }} 
+                        />
+                        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1a202c' }}>{author.name}</span>
+                          <span style={{ fontSize: '0.7rem', color: '#718096' }}>{author.role}</span>
+                        </div>
+                      </div>
+                      
+                      <Link to={`/proyecto/${project.id}`} className="project-link-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                        Ver Detalle
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              <button 
+                className="pagination-btn" 
+                onClick={() => {
+                  setCurrentPage(prev => Math.max(prev - 1, 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </button>
+              
+              {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`pagination-btn page-num ${currentPage === page ? 'active' : ''}`}
+                  onClick={() => {
+                    setCurrentPage(page);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                >
+                  {page}
+                </button>
+              ))}
+              
+              <button 
+                className="pagination-btn" 
+                onClick={() => {
+                  setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                disabled={currentPage === totalPages}
+              >
+                Siguiente
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
