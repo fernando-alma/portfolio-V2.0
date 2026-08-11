@@ -77,3 +77,15 @@ model Project {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
+
+// Categorías de Proyectos (Para administrar dinámicamente desde el panel admin y filtros del catálogo)
+model Category {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique // Identificador técnico único (ej: 'wordpress', 'frontend', 'backend', 'fullstack')
+  label     String   // Nombre visible en la UI (ej: 'WordPress', 'Front End', 'Full Stack')
+  icon      String?  // Clase de icono opcional (ej: 'fa-wordpress')
+  order     Int      @default(0) // Orden numérico para la UI
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

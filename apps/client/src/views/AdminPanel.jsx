@@ -13,6 +13,7 @@ const emptyProject = {
 };
 const emptyExp = { role: '', company: '', description: '', startDate: '', endDate: '', order: '' };
 const emptyEdu = { role: '', company: '', date: '', type: 'EDUCATION', order: '' };
+const emptyCat = { key: '', label: '', icon: '', order: '0' };
 
 export default function AdminPanel() {
   const token = localStorage.getItem('token') || '';
@@ -24,6 +25,7 @@ export default function AdminPanel() {
 
   // Data
   const [projects, setProjects] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [profile, setProfile] = useState(null);
   const [experiences, setExperiences] = useState([]);
   const [education, setEducation] = useState([]);
@@ -37,6 +39,10 @@ export default function AdminPanel() {
   // Project modal
   const [projModal, setProjModal] = useState({ open: false, mode: 'create', data: null });
   const [projForm, setProjForm] = useState(emptyProject);
+
+  // Category modal
+  const [catModal, setCatModal] = useState({ open: false, mode: 'create', data: null });
+  const [catForm, setCatForm] = useState(emptyCat);
 
   // Experience modal
   const [expModal, setExpModal] = useState({ open: false, mode: 'create', data: null });
@@ -63,7 +69,15 @@ export default function AdminPanel() {
     let p = Promise.resolve();
 
     if (activeTab === 'projects') {
-      p = fetch('/api/projects').then(r => r.json()).then(setProjects);
+      p = Promise.all([
+        fetch('/api/projects').then(r => r.json()),
+        fetch('/api/categories').then(r => r.json())
+      ]).then(([projs, cats]) => {
+        setProjects(projs);
+        setCategories(cats);
+      });
+    } else if (activeTab === 'categories') {
+      p = fetch('/api/categories').then(r => r.json()).then(setCategories);
     } else if (activeTab === 'profile') {
       p = fetch('/api/profile').then(r => r.json()).then(data => {
         setProfile(data);
@@ -112,6 +126,43 @@ export default function AdminPanel() {
       });
       if (!res.ok) throw new Error('Error al actualizar perfil');
       showFeedback('Perfil actualizado con éxito ✓');
+    } catch (err) { showFeedback(err.message, 'error'); }
+  };
+
+  // ── Categories ──
+  const openCatModal = (mode, data = null) => {
+    setCatModal({ open: true, mode, data });
+    setCatForm(mode === 'edit' && data ? {
+      key: data.key, label: data.label, icon: data.icon || '', order: data.order !== undefined ? String(data.order) : '0'
+    } : emptyCat);
+  };
+
+  const handleCatSubmit = async (e) => {
+    e.preventDefault();
+    const url = catModal.mode === 'create' ? '/api/categories' : `/api/categories/${catModal.data.id}`;
+    const method = catModal.mode === 'create' ? 'POST' : 'PUT';
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ ...catForm, order: Number(catForm.order) })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al guardar categoría');
+      showFeedback(`Categoría ${catModal.mode === 'create' ? 'creada' : 'actualizada'} ✓`);
+      setCatModal({ open: false, mode: 'create', data: null });
+      setActiveTab(''); setTimeout(() => setActiveTab('categories'), 50);
+    } catch (err) { showFeedback(err.message, 'error'); }
+  };
+
+  const deleteCat = async (id) => {
+    if (!confirm('¿Eliminar esta categoría?')) return;
+    try {
+      const res = await fetch(`/api/categories/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al eliminar');
+      showFeedback('Categoría eliminada');
+      setActiveTab(''); setTimeout(() => setActiveTab('categories'), 50);
     } catch (err) { showFeedback(err.message, 'error'); }
   };
 
@@ -247,6 +298,7 @@ export default function AdminPanel() {
       <div className="admin-nav-tabs">
         {[
           { key: 'projects',   icon: 'fa-folder-open', label: 'Proyectos' },
+          { key: 'categories', icon: 'fa-tags',        label: 'Categorías' },
           { key: 'experience', icon: 'fa-briefcase',    label: 'Experiencia' },
           { key: 'education',  icon: 'fa-graduation-cap', label: 'Educación' },
           { key: 'profile',    icon: 'fa-user-circle',  label: 'Sobre Mí' },
@@ -322,6 +374,57 @@ export default function AdminPanel() {
                 ))}
                 {projects.length === 0 && (
                   <tr><td colSpan="5" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin proyectos aún</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════
+          TAB: CATEGORÍAS
+      ═══════════════════════════════════════ */}
+      {!loading && activeTab === 'categories' && (
+        <div className="tab-pane">
+          <div className="pane-header">
+            <h3>Categorías de Proyectos</h3>
+            <button className="add-btn" onClick={() => openCatModal('create')}>
+              <i className="fas fa-plus"></i> Nueva Categoría
+            </button>
+          </div>
+
+          <div className="data-table-wrapper">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Nombre (Label)</th>
+                  <th className="hide-mobile">Key (Slug)</th>
+                  <th className="hide-mobile">Icono</th>
+                  <th className="hide-mobile">Orden</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map(cat => (
+                  <tr key={cat.id}>
+                    <td><strong>{cat.label}</strong></td>
+                    <td className="hide-mobile"><code>{cat.key}</code></td>
+                    <td className="hide-mobile">{cat.icon ? <><i className={`fas ${cat.icon}`} style={{ marginRight: '0.4rem' }}></i>{cat.icon}</> : '—'}</td>
+                    <td className="hide-mobile">{cat.order}</td>
+                    <td>
+                      <div className="table-actions">
+                        <button className="btn-icon edit" title="Editar" onClick={() => openCatModal('edit', cat)}>
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button className="btn-icon delete" title="Eliminar" onClick={() => deleteCat(cat.id)}>
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {categories.length === 0 && (
+                  <tr><td colSpan="5" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin categorías registradas</td></tr>
                 )}
               </tbody>
             </table>
@@ -561,12 +664,27 @@ export default function AdminPanel() {
 
                 <div className="form-row-2">
                   <div className="form-field">
-                    <label>Categoría (key)</label>
-                    <select value={projForm.category} onChange={e => setProjForm({ ...projForm, category: e.target.value })}>
-                      <option value="wordpress">wordpress</option>
-                      <option value="frontend">frontend</option>
-                      <option value="backend">backend</option>
-                      <option value="fullstack">fullstack</option>
+                    <label>Categoría</label>
+                    <select
+                      value={projForm.category}
+                      onChange={e => {
+                        const selectedKey = e.target.value;
+                        const foundCat = categories.find(c => c.key === selectedKey);
+                        setProjForm({
+                          ...projForm,
+                          category: selectedKey,
+                          categoryLabel: foundCat ? foundCat.label : projForm.categoryLabel
+                        });
+                      }}
+                    >
+                      {categories.map(cat => (
+                        <option key={cat.id || cat.key} value={cat.key}>
+                          {cat.label} ({cat.key})
+                        </option>
+                      ))}
+                      {!categories.some(c => c.key === projForm.category) && projForm.category && (
+                        <option value={projForm.category}>{projForm.categoryLabel || projForm.category}</option>
+                      )}
                     </select>
                   </div>
                   <div className="form-field">
@@ -753,6 +871,83 @@ export default function AdminPanel() {
                   <button type="submit" className="btn-save">
                     <i className="fas fa-save" style={{ marginRight: '0.4rem' }}></i>
                     {eduModal.mode === 'create' ? 'Crear Registro' : 'Guardar Cambios'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════
+          MODAL: CATEGORÍA (Crear / Editar)
+      ═══════════════════════════════════════ */}
+      {catModal.open && (
+        <div className="admin-modal-overlay" onClick={() => setCatModal({ open: false, mode: 'create', data: null })}>
+          <div className="admin-modal-box" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">
+              <i className={`fas ${catModal.mode === 'create' ? 'fa-plus-circle' : 'fa-edit'}`}></i>
+              {catModal.mode === 'create' ? 'Nueva Categoría' : 'Editar Categoría'}
+            </div>
+
+            <form onSubmit={handleCatSubmit}>
+              <div className="admin-form-grid">
+                <div className="form-field">
+                  <label>Nombre de Categoría (Label) *</label>
+                  <input
+                    type="text"
+                    value={catForm.label}
+                    onChange={e => {
+                      const newLabel = e.target.value;
+                      const autoKey = newLabel.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      setCatForm({
+                        ...catForm,
+                        label: newLabel,
+                        key: catModal.mode === 'create' ? autoKey : catForm.key
+                      });
+                    }}
+                    placeholder="Ej. Desarrollo Mobile"
+                    required
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label>Identificador Técnico (Key / Slug) *</label>
+                  <input
+                    type="text"
+                    value={catForm.key}
+                    onChange={e => setCatForm({ ...catForm, key: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                    placeholder="ej. mobile"
+                    required
+                  />
+                </div>
+
+                <div className="form-row-2">
+                  <div className="form-field">
+                    <label>Clase de Icono FontAwesome (Opcional)</label>
+                    <input
+                      type="text"
+                      value={catForm.icon}
+                      onChange={e => setCatForm({ ...catForm, icon: e.target.value })}
+                      placeholder="fa-mobile-alt"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Orden de Visualización</label>
+                    <input
+                      type="number"
+                      value={catForm.order}
+                      onChange={e => setCatForm({ ...catForm, order: e.target.value })}
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button type="button" className="btn-cancel" onClick={() => setCatModal({ open: false, mode: 'create', data: null })}>Cancelar</button>
+                  <button type="submit" className="btn-save">
+                    <i className="fas fa-save" style={{ marginRight: '0.4rem' }}></i>
+                    {catModal.mode === 'create' ? 'Crear Categoría' : 'Guardar Cambios'}
                   </button>
                 </div>
               </div>

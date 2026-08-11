@@ -3,26 +3,35 @@ import { Link } from 'react-router-dom';
 
 export default function Catalog() {
   const [projects, setProjects] = useState([]);
+  const [categories, setCategories] = useState([{ key: 'all', label: 'Todos', icon: '' }]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const categories = [
-    { key: 'all', label: 'Todos', icon: '' },
-    { key: 'wordpress', label: 'WordPress', icon: '' },
-    { key: 'frontend', label: 'Frontend', icon: '' },
-    { key: 'backend', label: 'Backend', icon: '' },
-    { key: 'fullstack', label: 'Full Stack', icon: '' }
-  ];
-
   useEffect(() => {
-    fetch('/api/projects')
-      .then((res) => {
+    Promise.all([
+      fetch('/api/projects').then((res) => {
         if (!res.ok) throw new Error('Error al cargar catálogo');
         return res.json();
+      }),
+      fetch('/api/categories').then((res) => {
+        if (!res.ok) return [];
+        return res.json();
       })
-      .then((data) => {
-        setProjects(data);
+    ])
+      .then(([projectsData, categoriesData]) => {
+        setProjects(projectsData);
+        if (Array.isArray(categoriesData) && categoriesData.length > 0) {
+          setCategories([{ key: 'all', label: 'Todos', icon: '' }, ...categoriesData]);
+        } else {
+          setCategories([
+            { key: 'all', label: 'Todos', icon: '' },
+            { key: 'wordpress', label: 'WordPress', icon: '' },
+            { key: 'frontend', label: 'Frontend', icon: '' },
+            { key: 'backend', label: 'Backend', icon: '' },
+            { key: 'fullstack', label: 'Full Stack', icon: '' }
+          ]);
+        }
         setLoading(false);
       })
       .catch((err) => {

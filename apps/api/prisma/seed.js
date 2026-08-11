@@ -726,6 +726,47 @@ async function main() {
   }
   console.log('✅ Catálogo de proyectos sembrado exitosamente.');
 
+  // 6. Sembrar Categorías por defecto y sincronizar las existentes
+  console.log('📁 Sembrando categorías de proyectos...');
+  const defaultCategories = [
+    { key: 'wordpress', label: 'WordPress', icon: 'fa-wordpress', order: 1 },
+    { key: 'frontend', label: 'Frontend', icon: 'fa-code', order: 2 },
+    { key: 'backend', label: 'Backend', icon: 'fa-server', order: 3 },
+    { key: 'fullstack', label: 'Full Stack', icon: 'fa-layer-group', order: 4 }
+  ];
+
+  for (const cat of defaultCategories) {
+    await prisma.category.upsert({
+      where: { key: cat.key },
+      update: { label: cat.label, icon: cat.icon, order: cat.order },
+      create: cat
+    });
+  }
+
+  // Descubrir categorías de proyectos existentes y agregarlas si no están
+  const existingProjects = await prisma.project.findMany();
+  let maxOrder = 4;
+  for (const p of existingProjects) {
+    if (p.category && p.categoryLabel) {
+      const key = p.category.toLowerCase().trim();
+      const existingCat = await prisma.category.findUnique({ where: { key } });
+      if (!existingCat) {
+        maxOrder++;
+        await prisma.category.create({
+          data: {
+            key,
+            label: p.categoryLabel,
+            icon: 'fa-folder',
+            order: maxOrder
+          }
+        });
+        console.log(`  ✓ Nueva categoría descubierta e insertada: ${p.categoryLabel} (${key})`);
+      }
+    }
+  }
+
+  console.log('✅ Categorías sembradas exitosamente.');
+
   console.log('🌱 Proceso de sembrado finalizado con éxito.');
 }
 
