@@ -48,7 +48,8 @@ router.post('/', requireAuth, async (req, res) => {
     gallery,
     youtubeUrl,
     githubUrl,
-    webUrl
+    webUrl,
+    featured
   } = req.body;
 
   if (!title || !category || !categoryLabel || !description || !image) {
@@ -69,7 +70,8 @@ router.post('/', requireAuth, async (req, res) => {
         gallery: gallery || [],
         youtubeUrl,
         githubUrl,
-        webUrl
+        webUrl,
+        featured: Boolean(featured)
       }
     });
     res.status(201).json({ message: 'Proyecto creado con éxito.', project: newProject });
@@ -94,7 +96,8 @@ router.put('/:id', requireAuth, async (req, res) => {
     gallery,
     youtubeUrl,
     githubUrl,
-    webUrl
+    webUrl,
+    featured
   } = req.body;
 
   try {
@@ -117,7 +120,8 @@ router.put('/:id', requireAuth, async (req, res) => {
         gallery: gallery || [],
         youtubeUrl,
         githubUrl,
-        webUrl
+        webUrl,
+        featured: featured !== undefined ? Boolean(featured) : existing.featured
       }
     });
 
@@ -125,6 +129,31 @@ router.put('/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Error al actualizar proyecto:', error);
     res.status(500).json({ error: 'Error al actualizar el proyecto.' });
+  }
+});
+
+// PATCH /api/projects/:id/featured - Cambiar el estado de destacado de un proyecto
+router.patch('/:id/featured', requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const { featured } = req.body;
+
+  try {
+    const existing = await prisma.project.findUnique({ where: { id: parseInt(id) } });
+    if (!existing) {
+      return res.status(404).json({ error: 'Proyecto no encontrado.' });
+    }
+
+    const updatedProject = await prisma.project.update({
+      where: { id: parseInt(id) },
+      data: {
+        featured: featured !== undefined ? Boolean(featured) : !existing.featured
+      }
+    });
+
+    res.json({ message: 'Estado de destacado actualizado.', project: updatedProject });
+  } catch (error) {
+    console.error('Error al cambiar estado destacado:', error);
+    res.status(500).json({ error: 'Error al actualizar el estado de destacado.' });
   }
 });
 

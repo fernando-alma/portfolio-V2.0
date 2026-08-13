@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const emptyProject = {
   title: '', agency: '', category: 'wordpress', categoryLabel: 'WordPress',
   description: '', longDescription: '', technologies: '',
-  image: '', gallery: '', youtubeUrl: '', githubUrl: '', webUrl: ''
+  image: '', gallery: '', youtubeUrl: '', githubUrl: '', webUrl: '', featured: false
 };
 const emptyExp = { role: '', company: '', description: '', startDate: '', endDate: '', order: '' };
 const emptyEdu = { role: '', company: '', date: '', type: 'EDUCATION', order: '' };
@@ -73,11 +73,11 @@ export default function AdminPanel() {
         fetch('/api/projects').then(r => r.json()),
         fetch('/api/categories').then(r => r.json())
       ]).then(([projs, cats]) => {
-        setProjects(projs);
-        setCategories(cats);
+        setProjects(Array.isArray(projs) ? projs : []);
+        setCategories(Array.isArray(cats) ? cats : []);
       });
     } else if (activeTab === 'categories') {
-      p = fetch('/api/categories').then(r => r.json()).then(setCategories);
+      p = fetch('/api/categories').then(r => r.json()).then(cats => setCategories(Array.isArray(cats) ? cats : []));
     } else if (activeTab === 'profile') {
       p = fetch('/api/profile').then(r => r.json()).then(data => {
         setProfile(data);
@@ -167,6 +167,20 @@ export default function AdminPanel() {
   };
 
   // ── Projects ──
+  const toggleFeatured = async (id, currentFeatured) => {
+    try {
+      const res = await fetch(`/api/projects/${id}/featured`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ featured: !currentFeatured })
+      });
+      if (!res.ok) throw new Error('Error al actualizar estado de destacado');
+      const data = await res.json();
+      setProjects(prev => prev.map(p => p.id === id ? { ...p, featured: data.project.featured } : p));
+      showFeedback(`Proyecto ${data.project.featured ? 'marcado como destacado ★' : 'desmarcado de destacados'}`);
+    } catch (err) { showFeedback(err.message, 'error'); }
+  };
+
   const openProjModal = (mode, data = null) => {
     setProjModal({ open: true, mode, data });
     setProjForm(mode === 'edit' && data ? {
@@ -175,7 +189,8 @@ export default function AdminPanel() {
       description: data.description, longDescription: data.longDescription || '',
       technologies: data.technologies ? data.technologies.join(', ') : '',
       image: data.image, gallery: data.gallery ? data.gallery.join(', ') : '',
-      youtubeUrl: data.youtubeUrl || '', githubUrl: data.githubUrl || '', webUrl: data.webUrl || ''
+      youtubeUrl: data.youtubeUrl || '', githubUrl: data.githubUrl || '', webUrl: data.webUrl || '',
+      featured: Boolean(data.featured)
     } : emptyProject);
   };
 
@@ -344,6 +359,7 @@ export default function AdminPanel() {
             <table className="data-table">
               <thead>
                 <tr>
+                  <th style={{ width: '45px', textAlign: 'center' }} title="Destacado">★</th>
                   <th className="hide-mobile">Imagen</th>
                   <th>Título</th>
                   <th className="hide-mobile">Categoría</th>
@@ -354,10 +370,28 @@ export default function AdminPanel() {
               <tbody>
                 {projects.map(p => (
                   <tr key={p.id}>
+                    <td style={{ textAlign: 'center' }}>
+                      <button
+                        type="button"
+                        className="btn-icon"
+                        title={p.featured ? "Quitar de destacados" : "Marcar como destacado"}
+                        onClick={() => toggleFeatured(p.id, p.featured)}
+                        style={{ color: p.featured ? '#f59e0b' : 'rgba(255, 255, 255, 0.25)', fontSize: '1.1rem', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                      >
+                        <i className={p.featured ? "fas fa-star" : "far fa-star"}></i>
+                      </button>
+                    </td>
                     <td className="hide-mobile">
                       <img className="thumb-img" src={p.image} alt={p.title} />
                     </td>
-                    <td><strong>{p.title}</strong></td>
+                    <td>
+                      <strong>{p.title}</strong>
+                      {p.featured && (
+                        <span className="cat-badge" style={{ marginLeft: '0.5rem', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+                          Destacado
+                        </span>
+                      )}
+                    </td>
                     <td className="hide-mobile"><span className="cat-badge">{p.categoryLabel}</span></td>
                     <td className="hide-mobile">{p.agency || '—'}</td>
                     <td>
@@ -373,7 +407,7 @@ export default function AdminPanel() {
                   </tr>
                 ))}
                 {projects.length === 0 && (
-                  <tr><td colSpan="5" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin proyectos aún</td></tr>
+                  <tr><td colSpan="6" style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: '2rem' }}>Sin proyectos aún</td></tr>
                 )}
               </tbody>
             </table>
@@ -750,6 +784,19 @@ export default function AdminPanel() {
                 <div className="form-field">
                   <label>URL Sitio Web en Producción</label>
                   <input type="url" value={projForm.webUrl} onChange={e => setProjForm({ ...projForm, webUrl: e.target.value })} placeholder="https://..." />
+                </div>
+
+                <div className="form-field" style={{ gridColumn: '1 / -1', background: 'rgba(245, 158, 11, 0.05)', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.2)', marginTop: '0.5rem' }}>
+                  <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.6rem', margin: 0, color: '#f59e0b', fontWeight: '600' }}>
+                    <input
+                      type="checkbox"
+                      checked={projForm.featured || false}
+                      onChange={e => setProjForm({ ...projForm, featured: e.target.checked })}
+                      style={{ width: '18px', height: '18px', accentColor: '#f59e0b', cursor: 'pointer' }}
+                    />
+                    <i className="fas fa-star" style={{ color: '#f59e0b' }}></i>
+                    Marcar como Proyecto Destacado (se mostrará en la sección superior del Home)
+                  </label>
                 </div>
 
                 <div className="form-actions">
