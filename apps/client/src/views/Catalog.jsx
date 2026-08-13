@@ -137,18 +137,6 @@ export default function Catalog() {
                   {/* Content */}
                   <div className="card-content">
                     <div>
-                      {/* Header: Agency tags */}
-                      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.8rem', flexWrap: 'wrap' }}>
-                        <span className="project-category" style={{ position: 'static', padding: '2px 8px', fontSize: '0.7rem' }}>
-                          {project.categoryLabel || project.category}
-                        </span>
-                        {project.agency && (
-                          <span className="project-category" style={{ position: 'static', padding: '2px 8px', fontSize: '0.7rem', background: '#2754ff' }}>
-                            {project.agency}
-                          </span>
-                        )}
-                      </div>
-
                       <h3 className="project-title">{project.title}</h3>
                       <p className="project-description" style={{ minHeight: '60px' }}>{project.description}</p>
 

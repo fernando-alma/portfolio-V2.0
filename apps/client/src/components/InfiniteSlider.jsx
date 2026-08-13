@@ -49,7 +49,6 @@ export default function InfiniteSlider() {
         {/* Section 0: Featured Projects */}
         <div style={{ marginBottom: '5rem' }}>
           <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
-            <i className="fas fa-star" style={{ color: '#f59e0b', fontSize: '1.6rem' }}></i>
             Proyectos Destacados
           </h2>
           <p className="section-description">

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import logoUrl from '../assets/logoportfolio.png';
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +84,7 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-        <img src={logoUrl} alt="Logo" className="navbar-logo" />
+        <span className="navbar-logo-text">&lt;Fernando Alma/&gt;</span>
       </div>
 
       <button 
@@ -137,17 +136,9 @@ export default function NavBar() {
               Portfolio Completo
             </Link>
           </li>
-          <li className="desktop-only">
-            <Link to="/panel-admin" className="nav-item" onClick={closeMenu}>
-              Admin
-            </Link>
-          </li>
         </ul>
 
         <div className="nav-mobile-buttons">
-          <Link to="/panel-admin" className="mobile-btn-outline" onClick={closeMenu}>
-            Admin
-          </Link>
           <Link to="/portfolio-completo" className="mobile-btn-filled" onClick={closeMenu}>
             Portfolio Completo
           </Link>

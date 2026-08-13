@@ -1,12 +1,11 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Navigation, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 export default function SliderComponent({ projects, sliderId }) {
   if (!projects || projects.length === 0) {
@@ -20,7 +19,7 @@ export default function SliderComponent({ projects, sliderId }) {
   return (
     <div className="infinite-slider-container" id={sliderId}>
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
+        modules={[Navigation, Autoplay]}
         spaceBetween={24}
         slidesPerView={1}
         loop={projects.length >= 3}
@@ -30,7 +29,6 @@ export default function SliderComponent({ projects, sliderId }) {
           pauseOnMouseEnter: true,
         }}
         navigation={true}
-        pagination={{ clickable: true }}
         breakpoints={{
           480: {
             slidesPerView: 1,
@@ -63,11 +61,6 @@ export default function SliderComponent({ projects, sliderId }) {
                 <div>
                   <h3 className="project-title">{project.title}</h3>
                   <p className="project-description">{project.description}</p>
-                  <p className="project-tech">
-                    {Array.isArray(project.technologies) 
-                      ? project.technologies.join(', ') 
-                      : project.technologies}
-                  </p>
                 </div>
                 <Link to={`/proyecto/${project.id}`} className="project-link-btn">
                   Ver detalle
